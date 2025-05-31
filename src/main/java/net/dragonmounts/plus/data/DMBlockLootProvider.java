@@ -1,0 +1,52 @@
+package net.dragonmounts.plus.data;
+
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+import net.dragonmounts.plus.common.init.DMBlocks;
+import net.dragonmounts.plus.common.init.DragonVariants;
+import net.dragonmounts.plus.compat.registry.DeferredBlock;
+import net.dragonmounts.plus.compat.registry.DragonVariant;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.data.loot.BlockLootSubProvider;
+import net.minecraft.world.flag.FeatureFlags;
+import net.minecraft.world.level.ItemLike;
+import net.minecraft.world.level.block.Block;
+import org.jetbrains.annotations.NotNull;
+
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+public class DMBlockLootProvider extends BlockLootSubProvider {
+    private final ObjectArrayList<Block> blocks = new ObjectArrayList<>();
+
+    public DMBlockLootProvider(HolderLookup.Provider lookup) {
+        super(Stream.concat(DMBlocks.BUILTIN_DRAGON_EGGS.stream().map(ItemLike::asItem),
+                DragonVariants.BUILTIN_VALUES.stream().map(variant -> variant.head.item().get())
+        ).collect(Collectors.toSet()), FeatureFlags.REGISTRY.allFlags(), lookup);
+    }
+
+    protected void dropSelf(DeferredBlock<?> block) {
+        var value = block.get();
+        this.dropSelf(value);
+        this.blocks.add(value);
+    }
+
+    protected void drop(DragonVariant variant) {
+        var head = variant.head;
+        var value = head.standing().get();
+        this.dropOther(value, head);
+        this.blocks.add(value);
+    }
+
+    @Override
+    public void generate() {
+        this.dropSelf(DMBlocks.DRAGON_NEST);
+        DMBlocks.BUILTIN_DRAGON_EGGS.forEach(this::dropSelf);
+        DMBlocks.BUILTIN_DRAGON_SCALE_BLOCKS.forEach(this::dropSelf);
+        DragonVariants.BUILTIN_VALUES.forEach(this::drop);
+    }
+
+    @Override
+    protected @NotNull Iterable<Block> getKnownBlocks() {
+        return this.blocks;
+    }
+}

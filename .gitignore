@@ -116,3 +116,4 @@ run/
 src/main/generated/.cache/
 
 gradle-wrapper.jar
+src/generated/resources/.cache/

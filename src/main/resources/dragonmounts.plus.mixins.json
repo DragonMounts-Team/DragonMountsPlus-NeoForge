@@ -1,12 +1,26 @@
 {
   "required": true,
   "minVersion": "0.8",
-  "package": "net.dragonmounts.plus.dragonmounts.mixin",
+  "package": "net.dragonmounts.plus.mixin",
   "compatibilityLevel": "JAVA_8",
   "refmap": "dragonmounts.plus.refmap.json",
   "mixins": [
+    "CameraMixin",
+    "ClientTooltipComponentManagerMixin",
+    "DebugPacketsMixin",
+    "ItemEntityMixin",
+    "ItemStackMixin",
+    "PlayerEntityMixin",
+    "RuleListMixin",
+    "ScoreboardMixin"
   ],
   "client": [
+    "CustomHeadLayerMixin",
+    "DebugRendererMixin",
+    "GuiGraphicsMixin",
+    "LivingEntityRendererMixin",
+    "LivingEntityRenderStateMixin",
+    "LocalPlayerMixin"
   ],
   "injectors": {
     "defaultRequire": 1

@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:block",
+  "pools": [
+    {
+      "bonus_rolls": 0.0,
+      "conditions": [
+        {
+          "condition": "minecraft:survives_explosion"
+        }
+      ],
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "dragonmounts.plus:moonlight_dragon_scale_block"
+        }
+      ],
+      "rolls": 1.0
+    }
+  ],
+  "random_sequence": "dragonmounts.plus:blocks/moonlight_dragon_scale_block"
+}
