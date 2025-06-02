@@ -11,7 +11,7 @@ import java.util.concurrent.CompletableFuture;
 
 public class DMStructureTagProvider extends StructureTagsProvider {
     public DMStructureTagProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> provider) {
-        super(output, provider, DragonMountsShared.MOD_ID);
+        super(output, provider, DragonMountsShared.NAMESPACE);
     }
 
     @Override

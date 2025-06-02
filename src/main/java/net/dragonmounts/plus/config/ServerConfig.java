@@ -47,6 +47,7 @@ public class ServerConfig {
         var builder = new ModConfigSpec.Builder();
         this.debug = builder
                 .comment("Debug mode. You need to restart Minecraft for the change to take effect. Unless you're a developer or are told to activate it, you don't want to set this to true.")
+                .worldRestart()
                 .define("debug", false);
         this.builder = builder;
     }

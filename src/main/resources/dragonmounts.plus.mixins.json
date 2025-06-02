@@ -5,6 +5,7 @@
   "compatibilityLevel": "JAVA_8",
   "refmap": "dragonmounts.plus.refmap.json",
   "mixins": [
+    "BredAnimalsTriggerMixin",
     "CameraMixin",
     "ClientTooltipComponentManagerMixin",
     "DebugPacketsMixin",

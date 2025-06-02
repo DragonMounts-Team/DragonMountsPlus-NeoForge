@@ -19,6 +19,7 @@ public class ClientConfig {
     private ClientConfig() {
         var builder = new ModConfigSpec.Builder();
         this.debug = builder
+                .gameRestart()
                 .comment("Debug mode. You need to restart Minecraft for the change to take effect. Unless you're a developer or are told to activate it, you don't want to set this to true.")
                 .define("debug", false);
         this.camera_distance = builder

@@ -4,7 +4,7 @@ import net.dragonmounts.plus.common.init.DMBlocks;
 import net.dragonmounts.plus.common.init.DMItems;
 import net.dragonmounts.plus.common.item.*;
 import net.dragonmounts.plus.common.tag.DMItemTags;
-import net.dragonmounts.plus.common.util.DragonScaleArmorSuit;
+import net.dragonmounts.plus.compat.registry.DragonScaleArmorSuit;
 import net.dragonmounts.plus.compat.registry.DragonType;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
@@ -131,10 +131,10 @@ public class DMRecipeProvider extends RecipeProvider {
 
     private void dragonScaleArmors(RecipeOutput consumer, Item scales, @Nullable DragonScaleArmorSuit suit) {
         if (suit == null) return;
-        shaped(RecipeCategory.COMBAT, suit.helmet()).define('X', scales).pattern("XXX").pattern("X X").unlockedBy("has_dragon_scales", has(scales)).save(consumer);
-        shaped(RecipeCategory.COMBAT, suit.chestplate()).define('X', scales).pattern("X X").pattern("XXX").pattern("XXX").unlockedBy("has_dragon_scales", has(scales)).save(consumer);
-        shaped(RecipeCategory.COMBAT, suit.leggings()).define('X', scales).pattern("XXX").pattern("X X").pattern("X X").unlockedBy("has_dragon_scales", has(scales)).save(consumer);
-        shaped(RecipeCategory.COMBAT, suit.boots()).define('X', scales).pattern("X X").pattern("X X").unlockedBy("has_dragon_scales", has(scales)).save(consumer);
+        shaped(RecipeCategory.COMBAT, suit.getHelmet()).define('X', scales).pattern("XXX").pattern("X X").unlockedBy("has_dragon_scales", has(scales)).save(consumer);
+        shaped(RecipeCategory.COMBAT, suit.getChestplate()).define('X', scales).pattern("X X").pattern("XXX").pattern("XXX").unlockedBy("has_dragon_scales", has(scales)).save(consumer);
+        shaped(RecipeCategory.COMBAT, suit.getLeggings()).define('X', scales).pattern("XXX").pattern("X X").pattern("X X").unlockedBy("has_dragon_scales", has(scales)).save(consumer);
+        shaped(RecipeCategory.COMBAT, suit.getBoots()).define('X', scales).pattern("X X").pattern("X X").unlockedBy("has_dragon_scales", has(scales)).save(consumer);
     }
 
     private void dragonScaleBow(RecipeOutput consumer, Item scales, @Nullable Item result) {

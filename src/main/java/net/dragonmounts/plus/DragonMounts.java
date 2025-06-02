@@ -12,7 +12,6 @@ import net.dragonmounts.plus.compat.platform.DMGameRules;
 import net.dragonmounts.plus.compat.platform.ServerNetworkHandler;
 import net.dragonmounts.plus.compat.registry.DeferredEntity;
 import net.dragonmounts.plus.compat.registry.RegistryHandler;
-import net.dragonmounts.plus.config.ClientConfig;
 import net.dragonmounts.plus.config.ServerConfig;
 import net.dragonmounts.plus.data.*;
 import net.minecraft.core.RegistrySetBuilder;
@@ -24,6 +23,7 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.EntitySelector;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
@@ -54,12 +54,11 @@ import static net.dragonmounts.plus.common.block.HatchableDragonEggBlock.spawn;
 import static net.dragonmounts.plus.common.util.EntityUtil.addOrMergeEffect;
 import static net.dragonmounts.plus.compat.platform.DMGameRules.IS_EGG_OVERRIDDEN;
 
-@Mod(DragonMounts.LOADED_MOD_ID)
+@Mod(DragonMounts.MOD_ID)
 public class DragonMounts {
-    public static final String LOADED_MOD_ID = "dragonmounts_plus";
+    public static final String MOD_ID = "dragonmounts_plus";
 
     public DragonMounts(IEventBus modbus, ModContainer container) {
-        ClientConfig.INSTANCE.register(container);
         ServerConfig.INSTANCE.register(container);
         modbus.addListener(DragonMounts::commonSetup);
         modbus.addListener(RegistryHandler::registerRegistries);
@@ -70,6 +69,7 @@ public class DragonMounts {
         modbus.addListener(DragonMounts::gatherClientData);
         modbus.addListener(DragonMounts::gatherServerData);
         DMEntities.init();
+        DMDataComponents.init();
         DMItems.init();
         DMBlocks.init();
         DMBlockEntities.init();
@@ -115,7 +115,12 @@ public class DragonMounts {
     }
 
     static void modifyCreativeTab(BuildCreativeModeTabContentsEvent event) {
-
+        var tab = event.getTabKey();
+        if (tab.equals(CreativeModeTabs.SPAWN_EGGS)) {
+            DMItemGroups.DRAGON_SPAWN_EGGS.accept(event.getParameters(), event);
+        } else if (tab.equals(CreativeModeTabs.FUNCTIONAL_BLOCKS)) {
+            DMItemGroups.DRAGON_SPAWN_EGGS.accept(event.getParameters(), event);
+        }
     }
 
     static void registerCommands(RegisterCommandsEvent event) {
@@ -199,7 +204,7 @@ public class DragonMounts {
         event.createDatapackRegistryObjects(new RegistrySetBuilder()
                         .add(Registries.STRUCTURE, DMStructures::bootstrap)
                         .add(Registries.STRUCTURE_SET, DMStructureSets::bootstrap),
-                Collections.singleton(DragonMountsShared.MOD_ID)
+                Collections.singleton(DragonMountsShared.NAMESPACE)
         );
         event.createProvider(DMBiomeTagProvider::new);
         event.createProvider(DMEntityTagProvider::new);

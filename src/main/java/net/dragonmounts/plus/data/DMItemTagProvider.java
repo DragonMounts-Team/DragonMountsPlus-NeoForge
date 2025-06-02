@@ -6,7 +6,7 @@ import net.dragonmounts.plus.common.init.DMItems;
 import net.dragonmounts.plus.common.item.*;
 import net.dragonmounts.plus.common.tag.DMBlockTags;
 import net.dragonmounts.plus.common.tag.DMItemTags;
-import net.dragonmounts.plus.common.util.DragonScaleArmorSuit;
+import net.dragonmounts.plus.compat.registry.DragonScaleArmorSuit;
 import net.dragonmounts.plus.compat.registry.DragonType;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
@@ -27,7 +27,7 @@ public class DMItemTagProvider extends ItemTagsProvider {
             CompletableFuture<HolderLookup.Provider> provider,
             CompletableFuture<TagLookup<Block>> block
     ) {
-        super(output, provider, block, DragonMountsShared.MOD_ID);
+        super(output, provider, block, DragonMountsShared.NAMESPACE);
     }
 
     protected IntrinsicTagAppender<Item> addToParent(IntrinsicTagAppender<Item> parent, TagKey<Item> child) {
@@ -70,10 +70,11 @@ public class DMItemTagProvider extends ItemTagsProvider {
         var leg = this.tag(ItemTags.LEG_ARMOR);
         var foot = this.tag(ItemTags.FOOT_ARMOR);
         Consumer<DragonScaleArmorSuit> addScaleSuit = suit -> {
-            head.add(suit.helmet().key);
-            chest.add(suit.chestplate().key);
-            leg.add(suit.leggings().key);
-            foot.add(suit.boots().key);
+            var info = suit.info;
+            head.add(info.helmet());
+            chest.add(info.chestplate());
+            leg.add(info.leggings());
+            foot.add(info.boots());
         };
         Consumer<Item> addToSwords = this.tag(ItemTags.SWORDS)::add;
         Consumer<Item> addToBows = this.tag(DMItemTags.DRAGON_SCALE_BOWS)::add;

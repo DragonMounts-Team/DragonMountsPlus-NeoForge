@@ -20,7 +20,7 @@ public class DMBlockLootProvider extends BlockLootSubProvider {
 
     public DMBlockLootProvider(HolderLookup.Provider lookup) {
         super(Stream.concat(DMBlocks.BUILTIN_DRAGON_EGGS.stream().map(ItemLike::asItem),
-                DragonVariants.BUILTIN_VALUES.stream().map(variant -> variant.head.item().get())
+                DragonVariants.BUILTIN_VALUES.stream().map(variant -> variant.head.item.get())
         ).collect(Collectors.toSet()), FeatureFlags.REGISTRY.allFlags(), lookup);
     }
 
@@ -32,7 +32,7 @@ public class DMBlockLootProvider extends BlockLootSubProvider {
 
     protected void drop(DragonVariant variant) {
         var head = variant.head;
-        var value = head.standing().get();
+        var value = head.standing.get();
         this.dropOther(value, head);
         this.blocks.add(value);
     }

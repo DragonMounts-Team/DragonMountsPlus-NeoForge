@@ -18,7 +18,7 @@ public abstract class DeferredHolder<V extends T, T> implements Supplier<V> {
 
     protected abstract V create();
 
-    public final void register(RegisterEvent.RegisterHelper<T> helper) {
+    protected final void register(RegisterEvent.RegisterHelper<T> helper) {
         helper.register(this.key, this.value = this.create());
     }
 
@@ -32,8 +32,7 @@ public abstract class DeferredHolder<V extends T, T> implements Supplier<V> {
 
     @Override
     public final V get() {
-        if (this.value == null) throw new IllegalStateException();
-        return this.value;
+        return Objects.requireNonNull(this.value);
     }
 
     @Override

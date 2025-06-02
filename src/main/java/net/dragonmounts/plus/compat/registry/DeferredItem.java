@@ -25,6 +25,7 @@ public class DeferredItem<T extends Item> extends DeferredHolder<T, Item> implem
         for (var entity : ITEMS) {
             entity.register(registry);
         }
+        DragonScaleArmorSuit.registerEntries(registry);
         DeferredBlockItem.registerEntries(registry);
     }
 

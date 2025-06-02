@@ -7,11 +7,7 @@ import net.dragonmounts.plus.common.init.DMBlocks;
 import net.dragonmounts.plus.common.init.DMItems;
 import net.dragonmounts.plus.common.init.DragonVariants;
 import net.dragonmounts.plus.common.item.*;
-import net.dragonmounts.plus.common.util.DragonScaleArmorSuit;
-import net.dragonmounts.plus.compat.registry.DeferredBlock;
-import net.dragonmounts.plus.compat.registry.DeferredItem;
-import net.dragonmounts.plus.compat.registry.DragonType;
-import net.dragonmounts.plus.compat.registry.DragonVariant;
+import net.dragonmounts.plus.compat.registry.*;
 import net.minecraft.client.color.item.Dye;
 import net.minecraft.client.data.models.BlockModelGenerators;
 import net.minecraft.client.data.models.ItemModelGenerators;
@@ -53,7 +49,7 @@ public class DMModelProvider extends ModelProvider {
     );
 
     public DMModelProvider(PackOutput output) {
-        super(output, DragonMountsShared.MOD_ID);
+        super(output, DragonMountsShared.NAMESPACE);
     }
 
     @Override
@@ -159,11 +155,11 @@ public class DMModelProvider extends ModelProvider {
     public static void generateDragonScaleArmors(ItemModelGenerators gen, DragonType type) {
         var suit = type.getInstance(DragonScaleArmorSuit.class, null);
         if (suit == null) return;
-        var assets = suit.type().material.assetId();
-        gen.generateTrimmableItem(suit.helmet().get(), assets, "helmet", false);
-        gen.generateTrimmableItem(suit.chestplate().get(), assets, "chestplate", false);
-        gen.generateTrimmableItem(suit.leggings().get(), assets, "leggings", false);
-        gen.generateTrimmableItem(suit.boots().get(), assets, "boots", false);
+        var assets = suit.type.material.assetId();
+        gen.generateTrimmableItem(suit.getHelmet(), assets, "helmet", false);
+        gen.generateTrimmableItem(suit.getChestplate(), assets, "chestplate", false);
+        gen.generateTrimmableItem(suit.getLeggings(), assets, "leggings", false);
+        gen.generateTrimmableItem(suit.getBoots(), assets, "boots", false);
     }
 
     public static void generateDragonHeads(BlockModelGenerators gen, Collection<DragonVariant> variants) {
@@ -171,9 +167,9 @@ public class DMModelProvider extends ModelProvider {
         var item = gen.itemModelOutput;
         variants.forEach(variant -> {
             var head = variant.head;
-            state.accept(createSimpleBlock(head.standing().get(), VANILLA_SKULL));
-            state.accept(createSimpleBlock(head.wall().get(), VANILLA_SKULL));
-            item.accept(head.item().get(), specialModel(VANILLA_DRAGON_HEAD, new DragonHeadRenderer.Unbaked(variant, 0.0F)));
+            state.accept(createSimpleBlock(head.standing.get(), VANILLA_SKULL));
+            state.accept(createSimpleBlock(head.wall.get(), VANILLA_SKULL));
+            item.accept(head.item.get(), specialModel(VANILLA_DRAGON_HEAD, new DragonHeadRenderer.Unbaked(variant, 0.0F)));
         });
     }
 

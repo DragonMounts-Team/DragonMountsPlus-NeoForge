@@ -5,11 +5,13 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.options.OptionsSubScreen;
 import net.minecraft.network.chat.Component;
+import net.neoforged.fml.ModContainer;
 
 import static net.dragonmounts.plus.client.LazyBooleanConfigOption.TOGGLE_STRINGIFIER;
 import static net.dragonmounts.plus.client.LazyDoubleConfigOption.X_2F_STRINGIFIER;
 import static net.minecraft.client.OptionInstance.BOOLEAN_TO_STRING;
 
+/// @see net.neoforged.neoforge.client.gui.ConfigurationScreen TODO
 public class DMConfigScreen extends OptionsSubScreen {
     protected static final LazyBooleanConfigOption DEBUG;
     protected static final LazyDoubleConfigOption CAMERA_DISTANCE;
@@ -33,7 +35,7 @@ public class DMConfigScreen extends OptionsSubScreen {
         TOGGLE_BREATHING = new LazyBooleanConfigOption("key.dragonmounts.plus.breathe", config.toggle_breathing, null, TOGGLE_STRINGIFIER);
     }
 
-    public DMConfigScreen(Screen lastScreen) {
+    public DMConfigScreen(ModContainer ignored, Screen lastScreen) {
         super(lastScreen, Minecraft.getInstance().options, Component.translatable("options.dragonmounts.plus.config"));
     }
 
