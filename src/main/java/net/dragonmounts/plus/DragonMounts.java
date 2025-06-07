@@ -10,13 +10,12 @@ import net.dragonmounts.plus.common.network.s2c.*;
 import net.dragonmounts.plus.compat.platform.ClientNetworkHandler;
 import net.dragonmounts.plus.compat.platform.DMGameRules;
 import net.dragonmounts.plus.compat.platform.ServerNetworkHandler;
-import net.dragonmounts.plus.compat.registry.DeferredEntity;
+import net.dragonmounts.plus.compat.registry.EntityHolder;
 import net.dragonmounts.plus.compat.registry.RegistryHandler;
 import net.dragonmounts.plus.config.ServerConfig;
 import net.dragonmounts.plus.data.*;
 import net.minecraft.core.RegistrySetBuilder;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.data.loot.LootTableProvider;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
@@ -26,7 +25,6 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
@@ -47,8 +45,6 @@ import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
 import net.neoforged.neoforge.network.registration.PayloadRegistrar;
 
 import java.util.Collections;
-import java.util.List;
-import java.util.Set;
 
 import static net.dragonmounts.plus.common.block.HatchableDragonEggBlock.spawn;
 import static net.dragonmounts.plus.common.util.EntityUtil.addOrMergeEffect;
@@ -85,7 +81,9 @@ public class DragonMounts {
         PayloadRegistrar registrar = event.registrar("1");
         registrar.playToServer(ControlDragonPayload.TYPE, ControlDragonPayload.CODEC, ServerNetworkHandler::handleDragonRiding);
         registrar.playToServer(TeleportDragonPayload.TYPE, TeleportDragonPayload.CODEC, ServerNetworkHandler::handleTeleportDragon);
-        registrar.playToServer(ToggleSittingPayload.TYPE, ToggleSittingPayload.CODEC, ServerNetworkHandler::handleToggleSitting);
+        registrar.playToServer(ToggleSittingByUUIDPayload.TYPE, ToggleSittingByUUIDPayload.CODEC, ServerNetworkHandler::handleToggleSitting);
+        registrar.playToServer(ToggleSittingByIDPayload.TYPE, ToggleSittingByIDPayload.CODEC, ServerNetworkHandler::handleToggleSitting);
+        registrar.playToServer(ToggleTrustPayload.TYPE, ToggleTrustPayload.CODEC, ServerNetworkHandler::handleToggleTrust);
         registrar.playToServer(ToggleFollowingPayload.TYPE, ToggleFollowingPayload.CODEC, ServerNetworkHandler::handleToggleFollowing);
         registrar.playToServer(RenameWhistlePayload.TYPE, RenameWhistlePayload.CODEC, ServerNetworkHandler::handleRenameWhistle);
         registrar.playToClient(SyncCooldownPayload.TYPE, SyncCooldownPayload.CODEC, ClientNetworkHandler::handleCooldownSync);
@@ -111,7 +109,7 @@ public class DragonMounts {
     }
 
     static void registerAttributes(EntityAttributeCreationEvent event) {
-        DeferredEntity.registerAttributes(event);
+        EntityHolder.registerAttributes(event);
     }
 
     static void modifyCreativeTab(BuildCreativeModeTabContentsEvent event) {
@@ -206,22 +204,12 @@ public class DragonMounts {
                         .add(Registries.STRUCTURE_SET, DMStructureSets::bootstrap),
                 Collections.singleton(DragonMountsShared.NAMESPACE)
         );
+        event.createProvider(DMRecipeProvider.Factory::new);
+        event.createProvider(DMLootProvider::new);
         event.createProvider(DMBiomeTagProvider::new);
         event.createProvider(DMEntityTagProvider::new);
         event.createProvider(DMStructureTagProvider::new);
-        var block = event.createProvider(DMBlockTagProvider::new);
-        event.createProvider((output, registries) ->
-                new DMItemTagProvider(output, registries, block.contentsGetter())
-        );
-        event.createProvider(DMRecipeProvider.Factory::new);
-        event.createProvider((output, registries) -> new LootTableProvider(
-                output,
-                Set.of(),
-                List.of(
-                        new LootTableProvider.SubProviderEntry(DMBlockLootProvider::new, LootContextParamSets.BLOCK)
-                ),
-                registries
-        ));
+        event.createBlockAndItemTags(DMBlockTagProvider::new, DMItemTagProvider::new);
     }
 
     public static void gatherClientData(GatherDataEvent.Client event) {

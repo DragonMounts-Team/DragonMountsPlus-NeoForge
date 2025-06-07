@@ -3,7 +3,7 @@ package net.dragonmounts.plus.data;
 import net.dragonmounts.plus.common.DragonMountsShared;
 import net.dragonmounts.plus.common.init.DMBlocks;
 import net.dragonmounts.plus.common.tag.DMBlockTags;
-import net.dragonmounts.plus.compat.registry.DeferredBlock;
+import net.dragonmounts.plus.compat.registry.BlockHolder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraft.tags.BlockTags;
@@ -79,9 +79,11 @@ public class DMBlockTagProvider extends BlockTagsProvider {
                 );
         addAll(this.tag(DMBlockTags.DRAGON_EGGS).add(Blocks.DRAGON_EGG), DMBlocks.BUILTIN_DRAGON_EGGS);
         addAll(this.tag(DMBlockTags.DRAGON_SCALE_BLOCKS), DMBlocks.BUILTIN_DRAGON_SCALE_BLOCKS);
+        this.tag(BlockTags.FEATURES_CANNOT_REPLACE).addTag(DMBlockTags.DRAGON_EGGS);
+        this.tag(BlockTags.BEACON_BASE_BLOCKS).addTag(DMBlockTags.DRAGON_SCALE_BLOCKS);
     }
 
-    static void addAll(TagAppender<Block> builder, Collection<? extends DeferredBlock<?>> blocks) {
+    static void addAll(TagAppender<Block> builder, Collection<? extends BlockHolder<?>> blocks) {
         for (var block : blocks) {
             builder.add(block.key);
         }

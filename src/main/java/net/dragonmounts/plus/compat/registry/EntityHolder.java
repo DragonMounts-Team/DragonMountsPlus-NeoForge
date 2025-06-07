@@ -18,11 +18,11 @@ import java.util.function.Supplier;
 
 import static net.dragonmounts.plus.common.DragonMountsShared.makeKey;
 
-public class DeferredEntity<T extends Entity> extends DeferredHolder<EntityType<T>, EntityType<?>> {
-    private static final Object2ObjectOpenHashMap<DeferredEntity<? extends LivingEntity>, Supplier<AttributeSupplier.Builder>> ATTRIBUTES = new Object2ObjectOpenHashMap<>();
-    private static final ObjectArrayList<DeferredEntity<?>> ENTITIES = new ObjectArrayList<>();
+public class EntityHolder<T extends Entity> extends DeferredHolder<EntityType<T>, EntityType<?>> {
+    private static final Object2ObjectOpenHashMap<EntityHolder<? extends LivingEntity>, Supplier<AttributeSupplier.Builder>> ATTRIBUTES = new Object2ObjectOpenHashMap<>();
+    private static final ObjectArrayList<EntityHolder<?>> ENTITIES = new ObjectArrayList<>();
 
-    public static <T extends Entity> DeferredEntity<T> registerEntity(
+    public static <T extends Entity> EntityHolder<T> registerEntity(
             String name,
             MobCategory category,
             EntityType.EntityFactory<T> factory,
@@ -30,12 +30,12 @@ public class DeferredEntity<T extends Entity> extends DeferredHolder<EntityType<
     ) {
         var builder = EntityType.Builder.of(factory, category);
         init.accept(builder);
-        var holder = new DeferredEntity<>(makeKey(Registries.ENTITY_TYPE, name), builder);
+        var holder = new EntityHolder<>(makeKey(Registries.ENTITY_TYPE, name), builder);
         ENTITIES.add(holder);
         return holder;
     }
 
-    public static <T extends LivingEntity> DeferredEntity<T> registerLivingEntity(
+    public static <T extends LivingEntity> EntityHolder<T> registerLivingEntity(
             String name,
             MobCategory category,
             EntityType.EntityFactory<T> factory,
@@ -61,7 +61,7 @@ public class DeferredEntity<T extends Entity> extends DeferredHolder<EntityType<
 
     private final Function<ResourceKey<EntityType<?>>, EntityType<T>> factory;
 
-    public DeferredEntity(ResourceKey<EntityType<?>> key, EntityType.Builder<T> builder) {
+    public EntityHolder(ResourceKey<EntityType<?>> key, EntityType.Builder<T> builder) {
         super(key);
         this.factory = builder::build;
     }

@@ -11,11 +11,11 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.function.BiFunction;
 
-public class DeferredBlockItem<B extends Block, I extends Item> extends DeferredHolder<I, Item> implements ItemLike {
-    private static final ObjectArrayList<DeferredBlockItem<?, ?>> ITEMS = new ObjectArrayList<>();
+public class BlockItemHolder<B extends Block, I extends Item> extends DeferredHolder<I, Item> implements ItemLike {
+    private static final ObjectArrayList<BlockItemHolder<?, ?>> ITEMS = new ObjectArrayList<>();
 
-    public static <B extends Block, I extends Item> DeferredBlockItem<B, I> registerItem(DeferredBlock<B> block, BiFunction<B, Item.Properties, I> factory) {
-        var holder = new DeferredBlockItem<>(block, factory);
+    public static <B extends Block, I extends Item> BlockItemHolder<B, I> registerItem(BlockHolder<B> block, BiFunction<B, Item.Properties, I> factory) {
+        var holder = new BlockItemHolder<>(block, factory);
         ITEMS.add(holder);
         return holder;
     }
@@ -27,9 +27,9 @@ public class DeferredBlockItem<B extends Block, I extends Item> extends Deferred
     }
 
     private final BiFunction<B, Item.Properties, I> factory;
-    public final DeferredBlock<B> block;
+    public final BlockHolder<B> block;
 
-    public DeferredBlockItem(DeferredBlock<B> block, BiFunction<B, Item.Properties, I> factory) {
+    public BlockItemHolder(BlockHolder<B> block, BiFunction<B, Item.Properties, I> factory) {
         super(ResourceKey.create(Registries.ITEM, block.key.location()));
         this.factory = factory;
         this.block = block;

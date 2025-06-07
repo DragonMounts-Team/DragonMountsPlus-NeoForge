@@ -3,7 +3,7 @@ package net.dragonmounts.plus.data;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.dragonmounts.plus.common.init.DMBlocks;
 import net.dragonmounts.plus.common.init.DragonVariants;
-import net.dragonmounts.plus.compat.registry.DeferredBlock;
+import net.dragonmounts.plus.compat.registry.BlockHolder;
 import net.dragonmounts.plus.compat.registry.DragonVariant;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.loot.BlockLootSubProvider;
@@ -24,13 +24,13 @@ public class DMBlockLootProvider extends BlockLootSubProvider {
         ).collect(Collectors.toSet()), FeatureFlags.REGISTRY.allFlags(), lookup);
     }
 
-    protected void dropSelf(DeferredBlock<?> block) {
+    protected void dropSelf(BlockHolder<?> block) {
         var value = block.get();
         this.dropSelf(value);
         this.blocks.add(value);
     }
 
-    protected void drop(DragonVariant variant) {
+    protected void dropHead(DragonVariant variant) {
         var head = variant.head;
         var value = head.standing.get();
         this.dropOther(value, head);
@@ -42,7 +42,7 @@ public class DMBlockLootProvider extends BlockLootSubProvider {
         this.dropSelf(DMBlocks.DRAGON_NEST);
         DMBlocks.BUILTIN_DRAGON_EGGS.forEach(this::dropSelf);
         DMBlocks.BUILTIN_DRAGON_SCALE_BLOCKS.forEach(this::dropSelf);
-        DragonVariants.BUILTIN_VALUES.forEach(this::drop);
+        DragonVariants.BUILTIN_VALUES.forEach(this::dropHead);
     }
 
     @Override

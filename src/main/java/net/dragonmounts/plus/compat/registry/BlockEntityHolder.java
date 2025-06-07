@@ -14,11 +14,11 @@ import java.util.Set;
 
 import static net.dragonmounts.plus.common.DragonMountsShared.makeKey;
 
-public class DeferredBlockEntity<T extends BlockEntity> extends DeferredHolder<BlockEntityType<T>, BlockEntityType<?>> {
-    private static final ObjectArrayList<DeferredBlockEntity<?>> ENTITIES = new ObjectArrayList<>();
+public class BlockEntityHolder<T extends BlockEntity> extends DeferredHolder<BlockEntityType<T>, BlockEntityType<?>> {
+    private static final ObjectArrayList<BlockEntityHolder<?>> ENTITIES = new ObjectArrayList<>();
 
-    public static <T extends BlockEntity> DeferredBlockEntity<T> registerBlockEntity(String name, BlockEntityType.BlockEntitySupplier<T> factory, DeferredBlock<?>... blocks) {
-        var holder = new DeferredBlockEntity<>(makeKey(Registries.BLOCK_ENTITY_TYPE, name), factory, blocks);
+    public static <T extends BlockEntity> BlockEntityHolder<T> registerBlockEntity(String name, BlockEntityType.BlockEntitySupplier<T> factory, BlockHolder<?>... blocks) {
+        var holder = new BlockEntityHolder<>(makeKey(Registries.BLOCK_ENTITY_TYPE, name), factory, blocks);
         ENTITIES.add(holder);
         return holder;
     }
@@ -29,10 +29,10 @@ public class DeferredBlockEntity<T extends BlockEntity> extends DeferredHolder<B
         }
     }
 
-    public final Set<DeferredBlock<?>> blocks;
+    public final Set<BlockHolder<?>> blocks;
     public final BlockEntityType.BlockEntitySupplier<? extends T> factory;
 
-    public DeferredBlockEntity(ResourceKey<BlockEntityType<?>> key, BlockEntityType.BlockEntitySupplier<? extends T> factory, DeferredBlock<?>... blocks) {
+    public BlockEntityHolder(ResourceKey<BlockEntityType<?>> key, BlockEntityType.BlockEntitySupplier<? extends T> factory, BlockHolder<?>... blocks) {
         super(key);
         this.factory = factory;
         this.blocks = Set.of(blocks);

@@ -144,8 +144,8 @@ public class RegistryHandler {
                 value.accept(registry);
             }
         });
-        event.register(Registries.BLOCK, DeferredBlock::registerEntries);
-        event.register(Registries.BLOCK_ENTITY_TYPE, DeferredBlockEntity::registerEntries);
+        event.register(Registries.BLOCK, BlockHolder::registerEntries);
+        event.register(Registries.BLOCK_ENTITY_TYPE, BlockEntityHolder::registerEntries);
         event.register(Registries.CONSUME_EFFECT_TYPE, registry -> {
             for (var value : RegistryHandler.CONSUMERS) {
                 value.accept(registry);
@@ -159,8 +159,8 @@ public class RegistryHandler {
         event.register(Registries.CREATIVE_MODE_TAB, registry -> DMItemGroups.register((category, title, icon) ->
                 registry.register(category.key, CreativeModeTab.builder().title(Component.translatable(title)).icon(icon).displayItems(category).build())
         ));
-        event.register(Registries.ENTITY_TYPE, DeferredEntity::registerEntries);
-        event.register(Registries.ITEM, DeferredItem::registerEntries);
+        event.register(Registries.ENTITY_TYPE, EntityHolder::registerEntries);
+        event.register(Registries.ITEM, ItemHolder::registerEntries);
         event.register(Registries.MENU, DMScreenHandlers::register);
         event.register(Registries.PARTICLE_TYPE, registry -> {
             for (var value : RegistryHandler.PARTICLES) {

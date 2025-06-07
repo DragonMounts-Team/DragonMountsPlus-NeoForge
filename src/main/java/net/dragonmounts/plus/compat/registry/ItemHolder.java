@@ -12,11 +12,11 @@ import java.util.function.Function;
 
 import static net.dragonmounts.plus.common.DragonMountsShared.makeKey;
 
-public class DeferredItem<T extends Item> extends DeferredHolder<T, Item> implements ItemLike {
-    private static final ObjectArrayList<DeferredItem<?>> ITEMS = new ObjectArrayList<>();
+public class ItemHolder<T extends Item> extends DeferredHolder<T, Item> implements ItemLike {
+    private static final ObjectArrayList<ItemHolder<?>> ITEMS = new ObjectArrayList<>();
 
-    public static <T extends Item> DeferredItem<T> registerItem(String name, Function<Item.Properties, T> factory) {
-        var holder = new DeferredItem<>(makeKey(Registries.ITEM, name), factory);
+    public static <T extends Item> ItemHolder<T> registerItem(String name, Function<Item.Properties, T> factory) {
+        var holder = new ItemHolder<>(makeKey(Registries.ITEM, name), factory);
         ITEMS.add(holder);
         return holder;
     }
@@ -26,12 +26,12 @@ public class DeferredItem<T extends Item> extends DeferredHolder<T, Item> implem
             entity.register(registry);
         }
         DragonScaleArmorSuit.registerEntries(registry);
-        DeferredBlockItem.registerEntries(registry);
+        BlockItemHolder.registerEntries(registry);
     }
 
     private final Function<Item.Properties, T> factory;
 
-    public DeferredItem(ResourceKey<Item> key, Function<Item.Properties, T> factory) {
+    public ItemHolder(ResourceKey<Item> key, Function<Item.Properties, T> factory) {
         super(key);
         this.factory = factory;
     }
