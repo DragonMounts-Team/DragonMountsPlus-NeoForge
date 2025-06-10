@@ -8,10 +8,11 @@ import net.minecraft.world.level.GameRules;
 
 import static net.minecraft.world.level.GameRules.register;
 
+@Deprecated // TODO: use config
 public class DMGameRules {
-    public static final double DEFAULT_DRAGON_BASE_HEALTH = 90D;
-    public static final double DEFAULT_DRAGON_BASE_DAMAGE = 12D;
-    public static final double DEFAULT_DRAGON_BASE_ARMOR = 8D;
+    public static final double DEFAULT_DRAGON_BASE_HEALTH = 90.0;
+    public static final double DEFAULT_DRAGON_BASE_DAMAGE = 12.0;
+    public static final double DEFAULT_DRAGON_BASE_ARMOR = 8.0;
     public static final GameRules.Key<DoubleRule> DRAGON_BASE_HEALTH = register("dragonmounts.plus.dragonBaseHealth", GameRules.Category.MOBS, DoubleRule.of(DEFAULT_DRAGON_BASE_HEALTH, 1D, 1024D));
     public static final GameRules.Key<DoubleRule> DRAGON_BASE_DAMAGE = register("dragonmounts.plus.dragonBaseDamage", GameRules.Category.MOBS, DoubleRule.of(DEFAULT_DRAGON_BASE_DAMAGE, 0D, 2048D));
     public static final GameRules.Key<DoubleRule> DRAGON_BASE_ARMOR = register("dragonmounts.plus.dragonBaseArmor", GameRules.Category.MOBS, DoubleRule.of(DEFAULT_DRAGON_BASE_ARMOR, 0D, 30D));

@@ -9,9 +9,7 @@ import net.dragonmounts.plus.compat.registry.DragonType;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.PackOutput;
-import net.minecraft.data.recipes.RecipeCategory;
-import net.minecraft.data.recipes.RecipeOutput;
-import net.minecraft.data.recipes.RecipeProvider;
+import net.minecraft.data.recipes.*;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
@@ -49,6 +47,9 @@ public class DMRecipeProvider extends RecipeProvider {
         blasting(Ingredient.of(DMItems.GOLDEN_DRAGON_ARMOR), RecipeCategory.MISC, Items.GOLD_INGOT, 1.0F, 100)
                 .unlockedBy("has_armor", has(DMItems.GOLDEN_DRAGON_ARMOR))
                 .save(output, makeKey(registry, "gold_ingot_form_blasting"));
+        cook(100, (desc, time, method) -> method.cook(
+                Ingredient.of(DMItems.DRAGON_MEAT), RecipeCategory.FOOD, DMItems.COOKED_DRAGON_MEAT, 0.35F, 200
+        ).unlockedBy("has_meat", has(DMItems.DRAGON_MEAT)).save(output, makeKey(registry, "cooked_dragon_meat_form_" + desc)));
         dragonArmor(output, Tags.Items.INGOTS_IRON, Tags.Items.STORAGE_BLOCKS_IRON, DMItems.IRON_DRAGON_ARMOR);
         dragonArmor(output, Tags.Items.INGOTS_GOLD, Tags.Items.STORAGE_BLOCKS_GOLD, DMItems.GOLDEN_DRAGON_ARMOR);
         dragonArmor(output, Tags.Items.GEMS_EMERALD, Tags.Items.STORAGE_BLOCKS_EMERALD, DMItems.EMERALD_DRAGON_ARMOR);
@@ -111,6 +112,21 @@ public class DMRecipeProvider extends RecipeProvider {
                 .pattern("X#X")
                 .unlockedBy("has_leather", has(Tags.Items.LEATHERS))
                 .save(output, makeKey(registry, getItemName(Items.SADDLE)));
+        shaped(RecipeCategory.TOOLS, DMItems.VARIATION_ORB)
+                .define('O', Items.ENDER_EYE)
+                .define('#', Tags.Items.GEMS_AMETHYST)
+                .define('*', Tags.Items.INGOTS_GOLD)
+                .pattern("*#*")
+                .pattern("#O#")
+                .pattern("*#*")
+                .unlockedBy("has_amethyst", has(Tags.Items.GEMS_AMETHYST))
+                .save(output);
+    }
+
+    public static void cook(int unit, CookingRecipeBuilder builder) {
+        builder.build("smelting", unit * 2, SimpleCookingRecipeBuilder::smelting);
+        builder.build("smoking", unit, SimpleCookingRecipeBuilder::smoking);
+        builder.build("campfire", unit * 6, SimpleCookingRecipeBuilder::campfireCooking);
     }
 
     void dragonArmor(RecipeOutput output, TagKey<Item> ingot, TagKey<Item> block, ItemLike result) {
@@ -181,5 +197,13 @@ public class DMRecipeProvider extends RecipeProvider {
         public @NotNull String getName() {
             return "Dragon Mounts Recipes";
         }
+    }
+
+    public interface CookingMethod {
+        RecipeBuilder cook(Ingredient ingredient, RecipeCategory category, ItemLike result, float experience, int time);
+    }
+
+    public interface CookingRecipeBuilder {
+        void build(String desc, int time, CookingMethod method);
     }
 }

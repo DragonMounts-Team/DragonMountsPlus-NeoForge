@@ -7,6 +7,7 @@ import net.minecraft.data.PackOutput;
 import net.minecraft.data.tags.BiomeTagsProvider;
 import net.minecraft.tags.BiomeTags;
 import net.minecraft.world.level.biome.Biomes;
+import net.neoforged.neoforge.common.Tags;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.concurrent.CompletableFuture;
@@ -23,18 +24,16 @@ public class DMBiomeTagProvider extends BiomeTagsProvider {
         this.tag(DMBiomeTags.HAS_ENCHANTED_DRAGON_NEST)
                 .addTag(BiomeTags.IS_END);
         this.tag(DMBiomeTags.HAS_FIRE_DRAGON_NEST)
-                .addTag(BiomeTags.IS_MOUNTAIN);
+                .addTag(BiomeTags.IS_MOUNTAIN)
+                .addTag(Tags.Biomes.IS_STONY_SHORES);
         this.tag(DMBiomeTags.HAS_FOREST_DRAGON_NEST)
                 .add(Biomes.PLAINS)
                 .add(Biomes.MEADOW)
                 .addTag(BiomeTags.IS_JUNGLE)
                 .addTag(BiomeTags.IS_FOREST);
         this.tag(DMBiomeTags.HAS_ICE_DRAGON_NEST)
-                .add(Biomes.ICE_SPIKES)
-                .add(Biomes.SNOWY_BEACH)
-                .add(Biomes.SNOWY_PLAINS)
-                .add(Biomes.SNOWY_SLOPES)
-                .add(Biomes.SNOWY_TAIGA);
+                .addTag(Tags.Biomes.IS_ICY)
+                .addTag(Tags.Biomes.IS_SNOWY);
         this.tag(DMBiomeTags.HAS_MOONLIGHT_DRAGON_NEST)
                 .addTag(BiomeTags.IS_OCEAN);
         this.tag(DMBiomeTags.HAS_NETHER_DRAGON_NEST)

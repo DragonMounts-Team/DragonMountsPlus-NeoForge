@@ -2,7 +2,7 @@
   "required": true,
   "minVersion": "0.8",
   "package": "net.dragonmounts.plus.mixin",
-  "compatibilityLevel": "JAVA_8",
+  "compatibilityLevel": "JAVA_21",
   "refmap": "dragonmounts.plus.refmap.json",
   "mixins": [
     "BredAnimalsTriggerMixin",
@@ -11,6 +11,7 @@
     "DebugPacketsMixin",
     "ItemEntityMixin",
     "ItemStackMixin",
+    "MobAccessor",
     "NoiseColumnMixin",
     "PlayerEntityMixin",
     "RuleListMixin",

@@ -8,6 +8,7 @@ import net.dragonmounts.plus.common.init.DMItemGroups;
 import net.dragonmounts.plus.common.init.DragonVariants;
 import net.dragonmounts.plus.compat.platform.DMAttachments;
 import net.dragonmounts.plus.compat.platform.DMScreenHandlers;
+import net.minecraft.core.Registry;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleType;
@@ -15,6 +16,7 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.util.Unit;
@@ -139,13 +141,16 @@ public class RegistryHandler {
     }
 
     public static void registerEntries(RegisterEvent event) {
+        if (register(event, Registries.BLOCK, BlockHolder::registerEntries)) return;
+        if (register(event, Registries.BLOCK_ENTITY_TYPE, BlockEntityHolder::registerEntries)) return;
+        if (register(event, Registries.ENTITY_TYPE, EntityHolder::registerEntries)) return;
+        if (register(event, Registries.ITEM, ItemHolder::registerEntries)) return;
+        if (register(event, Registries.MOB_EFFECT, EffectHolder::registerEntries)) return;
         event.register(Registries.ACTIVITY, registry -> {
             for (var value : RegistryHandler.ACTIVITIES) {
                 value.accept(registry);
             }
         });
-        event.register(Registries.BLOCK, BlockHolder::registerEntries);
-        event.register(Registries.BLOCK_ENTITY_TYPE, BlockEntityHolder::registerEntries);
         event.register(Registries.CONSUME_EFFECT_TYPE, registry -> {
             for (var value : RegistryHandler.CONSUMERS) {
                 value.accept(registry);
@@ -159,8 +164,6 @@ public class RegistryHandler {
         event.register(Registries.CREATIVE_MODE_TAB, registry -> DMItemGroups.register((category, title, icon) ->
                 registry.register(category.key, CreativeModeTab.builder().title(Component.translatable(title)).icon(icon).displayItems(category).build())
         ));
-        event.register(Registries.ENTITY_TYPE, EntityHolder::registerEntries);
-        event.register(Registries.ITEM, ItemHolder::registerEntries);
         event.register(Registries.MENU, DMScreenHandlers::register);
         event.register(Registries.PARTICLE_TYPE, registry -> {
             for (var value : RegistryHandler.PARTICLES) {
@@ -205,7 +208,16 @@ public class RegistryHandler {
         });
         event.register(DragonMountsShared.DRAGON_TYPE, DragonTypeBuilder::register);
         event.register(DragonMountsShared.DRAGON_VARIANT, registry -> {
-            for (var variant : DragonVariants.BUILTIN_VALUES) registry.register(variant.identifier, variant);
+            for (var variant : DragonVariants.BUILTIN_VALUES) {
+                registry.register(variant.identifier, variant);
+            }
         });
+    }
+
+    static <T> boolean register(RegisterEvent event, ResourceKey<? extends Registry<T>> key, Consumer<Registry<T>> action) {
+        var registry = event.getRegistry(key);
+        if (registry == null) return false;
+        action.accept(registry);
+        return true;
     }
 }

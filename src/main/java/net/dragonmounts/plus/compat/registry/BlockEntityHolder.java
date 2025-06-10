@@ -3,12 +3,12 @@ package net.dragonmounts.plus.compat.registry;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import it.unimi.dsi.fastutil.objects.ReferenceOpenHashSet;
 import it.unimi.dsi.fastutil.objects.ReferenceSets;
+import net.minecraft.core.Registry;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.neoforged.neoforge.registries.RegisterEvent;
 
 import java.util.Set;
 
@@ -23,7 +23,7 @@ public class BlockEntityHolder<T extends BlockEntity> extends DeferredHolder<Blo
         return holder;
     }
 
-    static void registerEntries(RegisterEvent.RegisterHelper<BlockEntityType<?>> registry) {
+    static void registerEntries(Registry<BlockEntityType<?>> registry) {
         for (var entity : ENTITIES) {
             entity.register(registry);
         }
@@ -42,7 +42,7 @@ public class BlockEntityHolder<T extends BlockEntity> extends DeferredHolder<Blo
     protected BlockEntityType<T> create() {
         var set = new ReferenceOpenHashSet<Block>();
         for (var block : this.blocks) {
-            set.add(block.get());
+            set.add(block.value());
         }
         if (set.isEmpty()) throw new IllegalStateException();
         return new BlockEntityType<>(this.factory, ReferenceSets.unmodifiable(set));

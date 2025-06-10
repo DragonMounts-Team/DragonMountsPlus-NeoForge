@@ -2,6 +2,7 @@ package net.dragonmounts.plus.compat.registry;
 
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+import net.minecraft.core.Registry;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.entity.Entity;
@@ -10,7 +11,6 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.neoforged.neoforge.event.entity.EntityAttributeCreationEvent;
-import net.neoforged.neoforge.registries.RegisterEvent;
 
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -49,11 +49,11 @@ public class EntityHolder<T extends Entity> extends DeferredHolder<EntityType<T>
 
     public static void registerAttributes(EntityAttributeCreationEvent event) {
         for (var entry : ATTRIBUTES.object2ObjectEntrySet()) {
-            event.put(entry.getKey().get(), entry.getValue().get().build());
+            event.put(entry.getKey().value(), entry.getValue().get().build());
         }
     }
 
-    static void registerEntries(RegisterEvent.RegisterHelper<EntityType<?>> registry) {
+    static void registerEntries(Registry<EntityType<?>> registry) {
         for (var entity : ENTITIES) {
             entity.register(registry);
         }
@@ -73,6 +73,6 @@ public class EntityHolder<T extends Entity> extends DeferredHolder<EntityType<T>
 
     @SuppressWarnings("unchecked")
     public final <R extends T> EntityType<R> cast() {
-        return (EntityType<R>) this.get();
+        return (EntityType<R>) this.value();
     }
 }

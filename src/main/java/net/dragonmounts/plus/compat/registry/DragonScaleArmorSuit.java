@@ -8,12 +8,12 @@ import net.dragonmounts.plus.common.capability.ArmorEffectManager;
 import net.dragonmounts.plus.common.item.DragonScaleArmorItem;
 import net.dragonmounts.plus.common.util.ArmorSuitInfo;
 import net.dragonmounts.plus.common.util.ItemGroup;
+import net.minecraft.core.Registry;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.equipment.ArmorType;
-import net.neoforged.neoforge.registries.RegisterEvent;
 
 import java.util.Objects;
 
@@ -54,9 +54,9 @@ public final class DragonScaleArmorSuit implements DragonTypified, ArmorEffectSo
         return suit;
     }
 
-    static void registerEntries(RegisterEvent.RegisterHelper<Item> registry) {
-        for (var entity : SUITS) {
-            entity.register(registry);
+    static void registerEntries(Registry<Item> registry) {
+        for (var suit : SUITS) {
+            suit.register(registry);
         }
     }
 
@@ -78,17 +78,17 @@ public final class DragonScaleArmorSuit implements DragonTypified, ArmorEffectSo
         this.effect = effect;
     }
 
-    private void register(RegisterEvent.RegisterHelper<Item> helper) {
+    private void register(Registry<Item> registry) {
         var info = this.info;
         var factory = info.factory();
         var key = info.helmet();
-        helper.register(key, this.helmet = factory.makeArmor(this, ArmorType.HELMET, new Item.Properties().setId(key)));
+        this.helmet = Registry.register(registry, key, factory.makeArmor(this, ArmorType.HELMET, new Item.Properties().setId(key)));
         key = info.chestplate();
-        helper.register(key, this.chestplate = factory.makeArmor(this, ArmorType.CHESTPLATE, new Item.Properties().setId(key)));
+        this.chestplate = Registry.register(registry, key, factory.makeArmor(this, ArmorType.CHESTPLATE, new Item.Properties().setId(key)));
         key = info.leggings();
-        helper.register(key, this.leggings = factory.makeArmor(this, ArmorType.LEGGINGS, new Item.Properties().setId(key)));
+        this.leggings = Registry.register(registry, key, factory.makeArmor(this, ArmorType.LEGGINGS, new Item.Properties().setId(key)));
         key = info.boots();
-        helper.register(key, this.boots = factory.makeArmor(this, ArmorType.BOOTS, new Item.Properties().setId(key)));
+        this.boots = Registry.register(registry, key, factory.makeArmor(this, ArmorType.BOOTS, new Item.Properties().setId(key)));
     }
 
     public DragonScaleArmorItem getHelmet() {

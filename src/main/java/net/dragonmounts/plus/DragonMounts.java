@@ -75,6 +75,7 @@ public class DragonMounts {
         DMSensors.init();
         DMStructures.init();
         DMParticles.init();
+        DMMobEffects.init();
     }
 
     public static void initNetwork(RegisterPayloadHandlersEvent event) {

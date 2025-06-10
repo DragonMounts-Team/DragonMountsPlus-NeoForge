@@ -5,8 +5,10 @@ import net.dragonmounts.plus.common.init.DMBlocks;
 import net.dragonmounts.plus.common.tag.DMBlockTags;
 import net.dragonmounts.plus.compat.registry.BlockHolder;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.data.PackOutput;
 import net.minecraft.tags.BlockTags;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.neoforged.neoforge.common.Tags;
@@ -15,13 +17,19 @@ import net.neoforged.neoforge.common.data.BlockTagsProvider;
 import java.util.Collection;
 import java.util.concurrent.CompletableFuture;
 
+import static net.minecraft.resources.ResourceLocation.fromNamespaceAndPath;
+
 public class DMBlockTagProvider extends BlockTagsProvider {
+    public static final TagKey<Block> TORCHES = TagKey.create(Registries.BLOCK, fromNamespaceAndPath("c", "torches"));
+
     public DMBlockTagProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> provider) {
         super(output, provider, DragonMountsShared.NAMESPACE);
     }
 
     @Override
     protected void addTags(HolderLookup.Provider registries) {
+        this.tag(TORCHES)
+                .add(Blocks.TORCH, Blocks.WALL_TORCH, Blocks.SOUL_TORCH, Blocks.SOUL_WALL_TORCH, Blocks.REDSTONE_TORCH, Blocks.REDSTONE_WALL_TORCH);
         this.tag(BlockTags.PIGLIN_REPELLENTS).add(DMBlocks.DRAGON_CORE.key);
         this.tag(BlockTags.DRAGON_IMMUNE).add(DMBlocks.DRAGON_CORE.key);
         this.tag(DMBlockTags.AIRFLOW_DESTRUCTIBLE)
@@ -36,6 +44,7 @@ public class DMBlockTagProvider extends BlockTagsProvider {
                 .addTag(BlockTags.SNOW)
                 .addTag(Tags.Blocks.GLASS_PANES)
                 .addTag(Tags.Blocks.SANDS)
+                .addTag(TORCHES)
                 .add(
                         // Overworld:
                         Blocks.SHORT_GRASS,

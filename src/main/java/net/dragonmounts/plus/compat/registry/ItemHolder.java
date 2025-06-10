@@ -1,11 +1,12 @@
 package net.dragonmounts.plus.compat.registry;
 
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+import net.minecraft.core.Registry;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ItemLike;
-import net.neoforged.neoforge.registries.RegisterEvent;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Function;
@@ -21,7 +22,7 @@ public class ItemHolder<T extends Item> extends DeferredHolder<T, Item> implemen
         return holder;
     }
 
-    static void registerEntries(RegisterEvent.RegisterHelper<Item> registry) {
+    static void registerEntries(Registry<Item> registry) {
         for (var entity : ITEMS) {
             entity.register(registry);
         }
@@ -36,6 +37,10 @@ public class ItemHolder<T extends Item> extends DeferredHolder<T, Item> implemen
         this.factory = factory;
     }
 
+    public boolean is(ItemStack stack) {
+        return this.value() == stack.getItem();
+    }
+
     @Override
     protected T create() {
         return this.factory.apply(new Item.Properties().setId(this.key));
@@ -43,6 +48,6 @@ public class ItemHolder<T extends Item> extends DeferredHolder<T, Item> implemen
 
     @Override
     public @NotNull Item asItem() {
-        return this.get();
+        return this.value();
     }
 }

@@ -60,6 +60,9 @@ public class DMItemTagProvider extends ItemTagsProvider {
                 .add(DMItems.GOLDEN_DRAGON_ARMOR.key);
         this.tag(ItemTags.PIGLIN_REPELLENTS)
                 .add(DMBlocks.DRAGON_CORE.asItem());
+        this.tag(ItemTags.MEAT)
+                .add(DMItems.DRAGON_MEAT.key)
+                .add(DMItems.COOKED_DRAGON_MEAT.key);
         this.tag(DMItemTags.BATONS)
                 .addTag(Tags.Items.RODS)
                 .add(Items.DEBUG_STICK)
@@ -97,7 +100,9 @@ public class DMItemTagProvider extends ItemTagsProvider {
                 .add(Items.PUFFERFISH) // fabric considers raw puffer fish as food...
                 .add(Items.PUFFERFISH_BUCKET)
                 .add(Items.AXOLOTL_BUCKET)
-                .add(Items.TADPOLE_BUCKET);
+                .add(Items.TADPOLE_BUCKET)
+                .add(DMItems.DRAGON_MEAT.key)
+                .add(DMItems.COOKED_DRAGON_MEAT.key);
         this.tag(DMItemTags.COOKED_DRAGON_FOODS)
                 .addTag(Tags.Items.FOODS_COOKED_MEAT)
                 .addTag(Tags.Items.FOODS_COOKED_FISH);

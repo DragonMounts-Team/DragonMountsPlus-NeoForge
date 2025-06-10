@@ -1,6 +1,7 @@
 package net.dragonmounts.plus.compat.registry;
 
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+import net.minecraft.core.Registry;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.Item;
@@ -8,7 +9,6 @@ import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.neoforge.registries.RegisterEvent;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Function;
@@ -24,7 +24,7 @@ public class BlockHolder<T extends Block> extends DeferredHolder<T, Block> imple
         return holder;
     }
 
-    static void registerEntries(RegisterEvent.RegisterHelper<Block> registry) {
+    static void registerEntries(Registry<Block> registry) {
         for (var entity : BLOCKS) {
             entity.register(registry);
         }
@@ -44,10 +44,10 @@ public class BlockHolder<T extends Block> extends DeferredHolder<T, Block> imple
 
     @Override
     public final @NotNull Item asItem() {
-        return this.get().asItem();
+        return this.value().asItem();
     }
 
     public final BlockState defaultBlockState() {
-        return this.get().defaultBlockState();
+        return this.value().defaultBlockState();
     }
 }
