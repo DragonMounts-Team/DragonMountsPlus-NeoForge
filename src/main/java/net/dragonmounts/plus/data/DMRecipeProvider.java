@@ -1,5 +1,6 @@
 package net.dragonmounts.plus.data;
 
+import net.dragonmounts.plus.common.block.DragonScaleBlock;
 import net.dragonmounts.plus.common.init.DMBlocks;
 import net.dragonmounts.plus.common.init.DMItems;
 import net.dragonmounts.plus.common.item.*;
@@ -7,9 +8,12 @@ import net.dragonmounts.plus.common.tag.DMItemTags;
 import net.dragonmounts.plus.compat.registry.DragonScaleArmorSuit;
 import net.dragonmounts.plus.compat.registry.DragonType;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.*;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
@@ -25,6 +29,7 @@ import java.util.concurrent.CompletableFuture;
 import static net.dragonmounts.plus.common.DragonMountsShared.makeKey;
 import static net.minecraft.data.recipes.SimpleCookingRecipeBuilder.blasting;
 import static net.minecraft.data.recipes.SimpleCookingRecipeBuilder.smelting;
+import static net.minecraft.data.recipes.SmithingTransformRecipeBuilder.smithing;
 
 public class DMRecipeProvider extends RecipeProvider {
     protected DMRecipeProvider(HolderLookup.Provider registries, RecipeOutput output) {
@@ -48,31 +53,40 @@ public class DMRecipeProvider extends RecipeProvider {
                 .unlockedBy("has_armor", has(DMItems.GOLDEN_DRAGON_ARMOR))
                 .save(output, makeKey(registry, "gold_ingot_form_blasting"));
         cook(100, (desc, time, method) -> method.cook(
-                Ingredient.of(DMItems.DRAGON_MEAT), RecipeCategory.FOOD, DMItems.COOKED_DRAGON_MEAT, 0.35F, 200
-        ).unlockedBy("has_meat", has(DMItems.DRAGON_MEAT)).save(output, makeKey(registry, "cooked_dragon_meat_form_" + desc)));
-        dragonArmor(output, Tags.Items.INGOTS_IRON, Tags.Items.STORAGE_BLOCKS_IRON, DMItems.IRON_DRAGON_ARMOR);
-        dragonArmor(output, Tags.Items.INGOTS_GOLD, Tags.Items.STORAGE_BLOCKS_GOLD, DMItems.GOLDEN_DRAGON_ARMOR);
-        dragonArmor(output, Tags.Items.GEMS_EMERALD, Tags.Items.STORAGE_BLOCKS_EMERALD, DMItems.EMERALD_DRAGON_ARMOR);
-        dragonArmor(output, Tags.Items.GEMS_DIAMOND, Tags.Items.STORAGE_BLOCKS_DIAMOND, DMItems.DIAMOND_DRAGON_ARMOR);
+                Ingredient.of(DMItems.DRAGON_MEAT), RecipeCategory.FOOD, DMItems.COOKED_DRAGON_MEAT, 0.35F, time
+        ).unlockedBy("has_meat", has(DMItems.DRAGON_MEAT)).save(this.output, makeKey(Registries.RECIPE, "cooked_dragon_meat_form_" + desc)));
+        this.dragonArmor(Tags.Items.INGOTS_IRON, Tags.Items.STORAGE_BLOCKS_IRON, DMItems.IRON_DRAGON_ARMOR);
+        this.dragonArmor(Tags.Items.INGOTS_GOLD, Tags.Items.STORAGE_BLOCKS_GOLD, DMItems.GOLDEN_DRAGON_ARMOR);
+        this.dragonArmor(Tags.Items.GEMS_EMERALD, Tags.Items.STORAGE_BLOCKS_EMERALD, DMItems.EMERALD_DRAGON_ARMOR);
+        this.dragonArmor(Tags.Items.GEMS_DIAMOND, Tags.Items.STORAGE_BLOCKS_DIAMOND, DMItems.DIAMOND_DRAGON_ARMOR);
         for (DragonType type : DragonType.REGISTRY) {
             var scales = type.getInstance(DragonScalesItem.class, null);
             if (scales == null) continue;
-            dragonScaleAxe(scales, output, type.getInstance(DragonScaleAxeItem.class, null));
-            dragonScaleArmors(output, scales, type.getInstance(DragonScaleArmorSuit.class, null));
-            dragonScaleBow(output, scales, type.getInstance(DragonScaleBowItem.class, null));
-            dragonScaleHoe(output, scales, type.getInstance(DragonScaleHoeItem.class, null));
-            dragonScalePickaxe(output, scales, type.getInstance(DragonScalePickaxeItem.class, null));
-            dragonScaleShovel(output, scales, type.getInstance(DragonScaleShovelItem.class, null));
-            dragonScaleShield(output, scales, type.getInstance(DragonScaleShieldItem.class, null));
-            dragonScaleSword(output, scales, type.getInstance(DragonScaleSwordItem.class, null));
+            this.dragonScaleAxe(scales, type.getInstance(DragonScaleAxeItem.class, null));
+            this.dragonScaleArmors(scales, type.getInstance(DragonScaleArmorSuit.class, null));
+            this.dragonScaleBlock(scales, type.getInstance(DragonScaleBlock.class, null));
+            this.dragonScaleBow(scales, type.getInstance(DragonScaleBowItem.class, null));
+            this.dragonScaleHoe(scales, type.getInstance(DragonScaleHoeItem.class, null));
+            this.dragonScalePickaxe(scales, type.getInstance(DragonScalePickaxeItem.class, null));
+            this.dragonScaleShovel(scales, type.getInstance(DragonScaleShovelItem.class, null));
+            this.dragonScaleShield(scales, type.getInstance(DragonScaleShieldItem.class, null));
+            this.dragonScaleSword(scales, type.getInstance(DragonScaleSwordItem.class, null));
         }
-        shaped(RecipeCategory.TOOLS, DMItems.DIAMOND_SHEARS)
+        this.shaped(RecipeCategory.TOOLS, DMItems.DIAMOND_SHEARS)
                 .define('X', Tags.Items.GEMS_DIAMOND)
                 .pattern(" X")
                 .pattern("X ")
                 .unlockedBy("has_diamond", has(Tags.Items.GEMS_DIAMOND))
                 .save(output);
-        shaped(RecipeCategory.REDSTONE, Items.DISPENSER)
+        smithing(
+                Ingredient.of(Items.NETHERITE_UPGRADE_SMITHING_TEMPLATE),
+                Ingredient.of(DMItems.DIAMOND_SHEARS),
+                this.tag(ItemTags.NETHERITE_TOOL_MATERIALS),
+                RecipeCategory.TOOLS,
+                DMItems.NETHERITE_SHEARS.get()
+        ).unlocks("has_netherite_ingot", this.has(ItemTags.NETHERITE_TOOL_MATERIALS))
+                .save(this.output, makeKey(registry, "netherite_shears_from_smithing"));
+        this.shaped(RecipeCategory.REDSTONE, Items.DISPENSER)
                 .define('R', Tags.Items.DUSTS_REDSTONE)
                 .define('#', Tags.Items.COBBLESTONES)
                 .define('X', DMItemTags.DRAGON_SCALE_BOWS)
@@ -81,7 +95,7 @@ public class DMRecipeProvider extends RecipeProvider {
                 .pattern("#R#")
                 .unlockedBy("has_bow", has(DMItemTags.DRAGON_SCALE_BOWS))
                 .save(output, makeKey(registry, getItemName(Blocks.DISPENSER)));
-        shaped(RecipeCategory.TOOLS, DMItems.AMULET)
+        this.shaped(RecipeCategory.TOOLS, DMItems.AMULET)
                 .define('#', Tags.Items.STRINGS)
                 .define('Y', Tags.Items.COBBLESTONES)
                 .define('X', Tags.Items.ENDER_PEARLS)
@@ -90,14 +104,14 @@ public class DMRecipeProvider extends RecipeProvider {
                 .pattern(" # ")
                 .unlockedBy("has_pearls", has(Tags.Items.ENDER_PEARLS))
                 .save(output);
-        shaped(RecipeCategory.DECORATIONS, DMBlocks.DRAGON_NEST)
+        this.shaped(RecipeCategory.DECORATIONS, DMBlocks.DRAGON_NEST)
                 .define('X', Tags.Items.RODS_WOODEN)
                 .pattern("XXX")
                 .pattern("XXX")
                 .pattern("XXX")
                 .unlockedBy("has_sticks", has(Tags.Items.RODS_WOODEN))
                 .save(output);
-        shaped(RecipeCategory.TOOLS, DMItems.WHISTLE)
+        this.shaped(RecipeCategory.TOOLS, DMItems.WHISTLE)
                 .define('P', Tags.Items.RODS_WOODEN)
                 .define('#', Tags.Items.ENDER_PEARLS)
                 .define('X', Tags.Items.STRINGS)
@@ -105,14 +119,14 @@ public class DMRecipeProvider extends RecipeProvider {
                 .pattern("#X")
                 .unlockedBy("has_pearls", has(Tags.Items.ENDER_PEARLS))
                 .save(output);
-        shaped(RecipeCategory.TOOLS, Items.SADDLE)
+        this.shaped(RecipeCategory.TOOLS, Items.SADDLE)
                 .define('#', Tags.Items.INGOTS_IRON)
                 .define('X', Tags.Items.LEATHERS)
                 .pattern(" X ")
                 .pattern("X#X")
                 .unlockedBy("has_leather", has(Tags.Items.LEATHERS))
                 .save(output, makeKey(registry, getItemName(Items.SADDLE)));
-        shaped(RecipeCategory.TOOLS, DMItems.VARIATION_ORB)
+        this.shaped(RecipeCategory.TOOLS, DMItems.VARIATION_ORB)
                 .define('O', Items.ENDER_EYE)
                 .define('#', Tags.Items.GEMS_AMETHYST)
                 .define('*', Tags.Items.INGOTS_GOLD)
@@ -129,58 +143,160 @@ public class DMRecipeProvider extends RecipeProvider {
         builder.build("campfire", unit * 6, SimpleCookingRecipeBuilder::campfireCooking);
     }
 
-    void dragonArmor(RecipeOutput output, TagKey<Item> ingot, TagKey<Item> block, ItemLike result) {
-        shaped(RecipeCategory.COMBAT, result).define('#', ingot).define('X', block).pattern("X #").pattern(" XX").pattern("## ").unlockedBy("has_ingot", has(ingot)).unlockedBy("has_block", has(block)).save(output);
+    void dragonArmor(TagKey<Item> ingot, TagKey<Item> block, ItemLike result) {
+        this.shaped(RecipeCategory.COMBAT, result)
+                .define('#', ingot)
+                .define('X', block)
+                .pattern("X #")
+                .pattern(" XX")
+                .pattern("## ")
+                .group("dragonmounts.plus.dragon_armor")
+                .unlockedBy("has_ingot", has(ingot))
+                .unlockedBy("has_block", has(block))
+                .save(this.output);
     }
 
-    void dragonScaleAxe(Item scales, RecipeOutput output, @Nullable Item result) {
+    void dragonScaleAxe(Item scales, @Nullable Item result) {
         if (result == null) return;
-        shaped(RecipeCategory.TOOLS, result)
+        this.shaped(RecipeCategory.TOOLS, result)
                 .define('#', Tags.Items.RODS_WOODEN)
                 .define('X', scales)
                 .pattern("XX")
                 .pattern("X#")
                 .pattern(" #")
+                .group("dragonmounts.plus.dragon_scale_axe")
                 .unlockedBy("has_dragon_scales", has(scales))
-                .save(output);
+                .save(this.output);
     }
 
-    private void dragonScaleArmors(RecipeOutput consumer, Item scales, @Nullable DragonScaleArmorSuit suit) {
+    private void dragonScaleArmors(Item scales, @Nullable DragonScaleArmorSuit suit) {
         if (suit == null) return;
-        shaped(RecipeCategory.COMBAT, suit.getHelmet()).define('X', scales).pattern("XXX").pattern("X X").unlockedBy("has_dragon_scales", has(scales)).save(consumer);
-        shaped(RecipeCategory.COMBAT, suit.getChestplate()).define('X', scales).pattern("X X").pattern("XXX").pattern("XXX").unlockedBy("has_dragon_scales", has(scales)).save(consumer);
-        shaped(RecipeCategory.COMBAT, suit.getLeggings()).define('X', scales).pattern("XXX").pattern("X X").pattern("X X").unlockedBy("has_dragon_scales", has(scales)).save(consumer);
-        shaped(RecipeCategory.COMBAT, suit.getBoots()).define('X', scales).pattern("X X").pattern("X X").unlockedBy("has_dragon_scales", has(scales)).save(consumer);
+        var hasScales = has(scales);
+        this.shaped(RecipeCategory.COMBAT, suit.getHelmet())
+                .define('X', scales)
+                .pattern("XXX")
+                .pattern("X X")
+                .group("dragonmounts.plus.dragon_scale_helmet")
+                .unlockedBy("has_dragon_scales", hasScales)
+                .save(this.output);
+        this.shaped(RecipeCategory.COMBAT, suit.getChestplate())
+                .define('X', scales)
+                .pattern("X X")
+                .pattern("XXX")
+                .pattern("XXX")
+                .group("dragonmounts.plus.dragon_scale_chestplate")
+                .unlockedBy("has_dragon_scales", hasScales)
+                .save(this.output);
+        this.shaped(RecipeCategory.COMBAT, suit.getLeggings())
+                .define('X', scales)
+                .pattern("XXX")
+                .pattern("X X")
+                .pattern("X X")
+                .group("dragonmounts.plus.dragon_scale_leggings")
+                .unlockedBy("has_dragon_scales", hasScales)
+                .save(this.output);
+        this.shaped(RecipeCategory.COMBAT, suit.getBoots())
+                .define('X', scales)
+                .pattern("X X")
+                .pattern("X X")
+                .group("dragonmounts.plus.dragon_scale_boots")
+                .unlockedBy("has_dragon_scales", hasScales)
+                .save(this.output);
     }
 
-    private void dragonScaleBow(RecipeOutput consumer, Item scales, @Nullable Item result) {
+    private void dragonScaleBlock(Item scales, @Nullable ItemLike result) {
         if (result == null) return;
-        shaped(RecipeCategory.COMBAT, result).define('#', scales).define('X', Tags.Items.STRINGS).pattern(" #X").pattern("# X").pattern(" #X").unlockedBy("has_dragon_scales", has(scales)).save(consumer);
+        this.shapeless(RecipeCategory.MISC, scales, 9)
+                .requires(result)
+                .group("dragonmounts.plus.dragon_scales")
+                .unlockedBy(getHasName(result), this.has(result))
+                .save(this.output, ResourceKey.create(Registries.RECIPE, BuiltInRegistries.ITEM.getKey(scales)));
+        this.shaped(RecipeCategory.BUILDING_BLOCKS, result)
+                .define('#', scales)
+                .pattern("###")
+                .pattern("###")
+                .pattern("###")
+                .group("dragonmounts.plus.dragon_scale_block")
+                .unlockedBy(getHasName(scales), this.has(scales))
+                .save(this.output, ResourceKey.create(Registries.RECIPE, BuiltInRegistries.ITEM.getKey(result.asItem())));
     }
 
-    private void dragonScaleHoe(RecipeOutput consumer, Item scales, @Nullable Item result) {
+    private void dragonScaleBow(Item scales, @Nullable Item result) {
         if (result == null) return;
-        shaped(RecipeCategory.TOOLS, result).define('#', Tags.Items.RODS_WOODEN).define('X', scales).pattern("XX").pattern(" #").pattern(" #").unlockedBy("has_dragon_scales", has(scales)).save(consumer);
+        this.shaped(RecipeCategory.COMBAT, result)
+                .define('#', scales)
+                .define('X', Tags.Items.STRINGS)
+                .pattern(" #X")
+                .pattern("# X")
+                .pattern(" #X")
+                .group("dragonmounts.plus.dragon_scale_bow")
+                .unlockedBy("has_dragon_scales", has(scales))
+                .save(this.output);
     }
 
-    private void dragonScalePickaxe(RecipeOutput consumer, Item scales, @Nullable Item result) {
+    private void dragonScaleHoe(Item scales, @Nullable Item result) {
         if (result == null) return;
-        shaped(RecipeCategory.TOOLS, result).define('#', Tags.Items.RODS_WOODEN).define('X', scales).pattern("XXX").pattern(" # ").pattern(" # ").unlockedBy("has_dragon_scales", has(scales)).save(consumer);
+        this.shaped(RecipeCategory.TOOLS, result)
+                .define('#', Tags.Items.RODS_WOODEN)
+                .define('X', scales)
+                .pattern("XX")
+                .pattern(" #")
+                .pattern(" #")
+                .group("dragonmounts.plus.dragon_scale_hoe")
+                .unlockedBy("has_dragon_scales", has(scales))
+                .save(this.output);
     }
 
-    private void dragonScaleShield(RecipeOutput consumer, Item scales, @Nullable Item result) {
+    private void dragonScalePickaxe(Item scales, @Nullable Item result) {
         if (result == null) return;
-        shaped(RecipeCategory.COMBAT, result).define('X', Tags.Items.INGOTS_IRON).define('W', scales).pattern("WXW").pattern("WWW").pattern(" W ").unlockedBy("has_dragon_scales", has(scales)).save(consumer);
+        this.shaped(RecipeCategory.TOOLS, result)
+                .define('#', Tags.Items.RODS_WOODEN)
+                .define('X', scales)
+                .pattern("XXX")
+                .pattern(" # ")
+                .pattern(" # ")
+                .group("dragonmounts.plus.dragon_scale_pickaxe")
+                .unlockedBy("has_dragon_scales", has(scales))
+                .save(this.output);
     }
 
-    private void dragonScaleShovel(RecipeOutput consumer, Item scales, @Nullable Item result) {
+    private void dragonScaleShield(Item scales, @Nullable Item result) {
         if (result == null) return;
-        shaped(RecipeCategory.TOOLS, result).define('#', Tags.Items.RODS_WOODEN).define('X', scales).pattern("X").pattern("#").pattern("#").unlockedBy("has_dragon_scales", has(scales)).save(consumer);
+        this.shaped(RecipeCategory.COMBAT, result)
+                .define('X', Tags.Items.INGOTS_IRON)
+                .define('W', scales)
+                .pattern("WXW")
+                .pattern("WWW")
+                .pattern(" W ")
+                .group("dragonmounts.plus.dragon_scale_shield")
+                .unlockedBy("has_dragon_scales", has(scales))
+                .save(this.output);
     }
 
-    private void dragonScaleSword(RecipeOutput consumer, Item scales, @Nullable Item result) {
+    private void dragonScaleShovel(Item scales, @Nullable Item result) {
         if (result == null) return;
-        shaped(RecipeCategory.COMBAT, result).define('#', Tags.Items.RODS_WOODEN).define('X', scales).pattern("X").pattern("X").pattern("#").unlockedBy("has_dragon_scales", has(scales)).save(consumer);
+        this.shaped(RecipeCategory.TOOLS, result)
+                .define('#', Tags.Items.RODS_WOODEN)
+                .define('X', scales)
+                .pattern("X")
+                .pattern("#")
+                .pattern("#")
+                .group("dragonmounts.plus.dragon_scale_shovel")
+                .unlockedBy("has_dragon_scales", has(scales))
+                .save(this.output);
+    }
+
+    private void dragonScaleSword(Item scales, @Nullable Item result) {
+        if (result == null) return;
+        this.shaped(RecipeCategory.COMBAT, result)
+                .define('#', Tags.Items.RODS_WOODEN)
+                .define('X', scales)
+                .pattern("X")
+                .pattern("X")
+                .pattern("#")
+                .group("dragonmounts.plus.dragon_scale_sword")
+                .unlockedBy("has_dragon_scales", has(scales))
+                .save(this.output);
     }
 
     public static final class Factory extends RecipeProvider.Runner {
