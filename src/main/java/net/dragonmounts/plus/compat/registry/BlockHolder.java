@@ -44,10 +44,10 @@ public class BlockHolder<T extends Block> extends DeferredHolder<T, Block> imple
 
     @Override
     public final @NotNull Item asItem() {
-        return this.value().asItem();
+        return this.get().asItem();
     }
 
     public final BlockState defaultBlockState() {
-        return this.value().defaultBlockState();
+        return this.get().defaultBlockState();
     }
 }

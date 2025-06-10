@@ -38,7 +38,7 @@ public class ItemHolder<T extends Item> extends DeferredHolder<T, Item> implemen
     }
 
     public boolean is(ItemStack stack) {
-        return this.value() == stack.getItem();
+        return this.get() == stack.getItem();
     }
 
     @Override
@@ -48,6 +48,6 @@ public class ItemHolder<T extends Item> extends DeferredHolder<T, Item> implemen
 
     @Override
     public @NotNull Item asItem() {
-        return this.value();
+        return this.get();
     }
 }

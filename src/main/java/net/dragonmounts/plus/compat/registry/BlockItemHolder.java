@@ -37,11 +37,11 @@ public class BlockItemHolder<B extends Block, I extends Item> extends DeferredHo
 
     @Override
     protected I create() {
-        return this.factory.apply(this.block.value(), new Item.Properties().setId(this.key).useBlockDescriptionPrefix());
+        return this.factory.apply(this.block.get(), new Item.Properties().setId(this.key).useBlockDescriptionPrefix());
     }
 
     @Override
     public @NotNull Item asItem() {
-        return this.value();
+        return this.get();
     }
 }

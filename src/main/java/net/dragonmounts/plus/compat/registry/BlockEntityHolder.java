@@ -42,7 +42,7 @@ public class BlockEntityHolder<T extends BlockEntity> extends DeferredHolder<Blo
     protected BlockEntityType<T> create() {
         var set = new ReferenceOpenHashSet<Block>();
         for (var block : this.blocks) {
-            set.add(block.value());
+            set.add(block.get());
         }
         if (set.isEmpty()) throw new IllegalStateException();
         return new BlockEntityType<>(this.factory, ReferenceSets.unmodifiable(set));

@@ -87,9 +87,9 @@ public class DragonMountsClient {
     }
 
     public static void registerRenderers(EntityRenderersEvent.RegisterRenderers event) {
-        event.registerBlockEntityRenderer(DMBlockEntities.DRAGON_CORE.value(), DragonCoreRenderer::new);
-        event.registerBlockEntityRenderer(DMBlockEntities.DRAGON_HEAD.value(), DragonHeadRenderer.INSTANCE);
-        event.registerEntityRenderer(DMEntities.HATCHABLE_DRAGON_EGG.value(), DragonEggRenderer::new);
+        event.registerBlockEntityRenderer(DMBlockEntities.DRAGON_CORE.get(), DragonCoreRenderer::new);
+        event.registerBlockEntityRenderer(DMBlockEntities.DRAGON_HEAD.get(), DragonHeadRenderer.INSTANCE);
+        event.registerEntityRenderer(DMEntities.HATCHABLE_DRAGON_EGG.get(), DragonEggRenderer::new);
         event.registerEntityRenderer(DMEntities.TAMEABLE_DRAGON.cast(), TameableDragonRenderer::new);
     }
 
@@ -104,12 +104,12 @@ public class DragonMountsClient {
     }
 
     public static void registerSpecialRenderers(RegisterSpecialBlockModelRendererEvent event) {
-        event.register(DMBlocks.DRAGON_CORE.value(), new DragonCoreRenderer.Unbaked(0.0F, Direction.SOUTH));
+        event.register(DMBlocks.DRAGON_CORE.get(), new DragonCoreRenderer.Unbaked(0.0F, Direction.SOUTH));
         for (var variant : DragonVariants.BUILTIN_VALUES) {
             var head = variant.head;
             var renderer = new DragonHeadRenderer.Unbaked(variant, 0.0F);
-            event.register(head.standing.value(), renderer);
-            event.register(head.wall.value(), renderer);
+            event.register(head.standing.get(), renderer);
+            event.register(head.wall.get(), renderer);
         }
     }
 

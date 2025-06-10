@@ -61,7 +61,7 @@ public class DMModelProvider extends ModelProvider {
         generateBlocksWithItem(blocks, BlockModelGenerators::createTrivialCube, DMBlocks.BUILTIN_DRAGON_SCALE_BLOCKS);
         {
             var particle = TextureMapping.particle(makeId("block/dragon_core_break"));
-            var block = DMBlocks.DRAGON_CORE.value();
+            var block = DMBlocks.DRAGON_CORE.get();
             blocks.blockStateOutput.accept(createSimpleBlock(block, ModelTemplates.PARTICLE_ONLY.create(block, particle, blocks.modelOutput)));
             var item = block.asItem();
             blocks.itemModelOutput.accept(item, ItemModelUtils.specialModel(
@@ -70,7 +70,7 @@ public class DMModelProvider extends ModelProvider {
             ));
         }
         // Items:
-        items.generateItemWithTintedOverlay(DMItems.WHISTLE.value(), "_string", new Dye(-1));
+        items.generateItemWithTintedOverlay(DMItems.WHISTLE.get(), "_string", new Dye(-1));
         generateFlatItem(items, DMItems.AMULET);
         generateFlatItem(items, DMItems.IRON_DRAGON_ARMOR);
         generateFlatItem(items, DMItems.GOLDEN_DRAGON_ARMOR);
@@ -115,11 +115,11 @@ public class DMModelProvider extends ModelProvider {
     }
 
     public static void generateFlatItem(ItemModelGenerators gen, ItemHolder<?> item) {
-        gen.generateFlatItem(item.value(), ModelTemplates.FLAT_ITEM);
+        gen.generateFlatItem(item.get(), ModelTemplates.FLAT_ITEM);
     }
 
     public static void generateSpawnEgg(ItemModelGenerators gen, ItemHolder<?> item, int primaryColor, int secondaryColor) {
-        gen.generateSpawnEgg(item.value(), primaryColor, secondaryColor);
+        gen.generateSpawnEgg(item.get(), primaryColor, secondaryColor);
     }
 
     /**
@@ -169,9 +169,9 @@ public class DMModelProvider extends ModelProvider {
         var item = gen.itemModelOutput;
         variants.forEach(variant -> {
             var head = variant.head;
-            state.accept(createSimpleBlock(head.standing.value(), VANILLA_SKULL));
-            state.accept(createSimpleBlock(head.wall.value(), VANILLA_SKULL));
-            item.accept(head.item.value(), specialModel(VANILLA_DRAGON_HEAD, new DragonHeadRenderer.Unbaked(variant, 0.0F)));
+            state.accept(createSimpleBlock(head.standing.get(), VANILLA_SKULL));
+            state.accept(createSimpleBlock(head.wall.get(), VANILLA_SKULL));
+            item.accept(head.item.get(), specialModel(VANILLA_DRAGON_HEAD, new DragonHeadRenderer.Unbaked(variant, 0.0F)));
         });
     }
 
@@ -189,7 +189,7 @@ public class DMModelProvider extends ModelProvider {
 
     public static <T extends Block> void generateBlocksWithItem(BlockModelGenerators gen, BiConsumer<BlockModelGenerators, T> consumer, Collection<BlockHolder<T>> holders) {
         for (var holder : holders) {
-            var block = holder.value();
+            var block = holder.get();
             consumer.accept(gen, block);
             gen.itemModelOutput.accept(block.asItem(), plainModel(getModelLocation(block)));
         }

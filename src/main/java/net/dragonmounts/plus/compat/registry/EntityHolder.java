@@ -49,7 +49,7 @@ public class EntityHolder<T extends Entity> extends DeferredHolder<EntityType<T>
 
     public static void registerAttributes(EntityAttributeCreationEvent event) {
         for (var entry : ATTRIBUTES.object2ObjectEntrySet()) {
-            event.put(entry.getKey().value(), entry.getValue().get().build());
+            event.put(entry.getKey().get(), entry.getValue().get().build());
         }
     }
 
@@ -73,6 +73,6 @@ public class EntityHolder<T extends Entity> extends DeferredHolder<EntityType<T>
 
     @SuppressWarnings("unchecked")
     public final <R extends T> EntityType<R> cast() {
-        return (EntityType<R>) this.value();
+        return (EntityType<R>) this.get();
     }
 }
