@@ -20,6 +20,7 @@ import net.minecraft.world.entity.ai.behavior.EntityTracker;
 import net.minecraft.world.entity.ai.memory.MemoryModuleType;
 import net.neoforged.neoforge.network.PacketDistributor;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
+import org.jetbrains.annotations.Nullable;
 
 public class ServerNetworkHandler {
     public static void sendTo(ServerPlayer player, CustomPacketPayload payload) {
@@ -30,7 +31,7 @@ public class ServerNetworkHandler {
         PacketDistributor.sendToPlayersTrackingEntity(entity, payload);
     }
 
-    public static void sendToAll(MinecraftServer server, CustomPacketPayload payload) {
+    public static void sendToAll(@Nullable MinecraftServer ignored, CustomPacketPayload payload) {
         PacketDistributor.sendToAllPlayers(payload);
     }
 

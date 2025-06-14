@@ -8,16 +8,18 @@ import net.dragonmounts.plus.common.init.*;
 import net.dragonmounts.plus.common.network.c2s.*;
 import net.dragonmounts.plus.common.network.s2c.*;
 import net.dragonmounts.plus.compat.platform.ClientNetworkHandler;
-import net.dragonmounts.plus.compat.platform.DMGameRules;
 import net.dragonmounts.plus.compat.platform.ServerNetworkHandler;
 import net.dragonmounts.plus.compat.registry.EntityHolder;
 import net.dragonmounts.plus.compat.registry.RegistryHandler;
 import net.dragonmounts.plus.config.ServerConfig;
+import net.dragonmounts.plus.config.network.ConfigNetworkHandler;
+import net.dragonmounts.plus.config.network.S2CBooleanConfigPayload;
+import net.dragonmounts.plus.config.network.S2CDoubleConfigPayload;
+import net.dragonmounts.plus.config.network.S2CSyncConfigPayload;
 import net.dragonmounts.plus.data.*;
 import net.minecraft.core.RegistrySetBuilder;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.EntitySelector;
@@ -48,7 +50,6 @@ import java.util.Collections;
 
 import static net.dragonmounts.plus.common.block.HatchableDragonEggBlock.spawn;
 import static net.dragonmounts.plus.common.util.EntityUtil.addOrMergeEffect;
-import static net.dragonmounts.plus.compat.platform.DMGameRules.IS_EGG_OVERRIDDEN;
 
 @Mod(DragonMounts.MOD_ID)
 public class DragonMounts {
@@ -94,7 +95,9 @@ public class DragonMounts {
         registrar.playToClient(SyncDragonAgePayload.TYPE, SyncDragonAgePayload.CODEC, ClientNetworkHandler::handleDragonSync);
         registrar.playToClient(FeedDragonPayload.TYPE, FeedDragonPayload.CODEC, ClientNetworkHandler::handleFeedDragon);
         registrar.playToClient(SyncEggAgePayload.TYPE, SyncEggAgePayload.CODEC, ClientNetworkHandler::handleEggSync);
-        registrar.playToClient(EggPushablePayload.TYPE, EggPushablePayload.CODEC, ClientNetworkHandler::handleEggPushable);
+        registrar.playToClient(S2CSyncConfigPayload.TYPE, S2CSyncConfigPayload.CODEC, ConfigNetworkHandler::handleSyncConfig);
+        registrar.playToClient(S2CBooleanConfigPayload.TYPE, S2CBooleanConfigPayload.CODEC, ConfigNetworkHandler::handleBooleanConfig);
+        registrar.playToClient(S2CDoubleConfigPayload.TYPE, S2CDoubleConfigPayload.CODEC, ConfigNetworkHandler::handleDoubleConfig);
     }
 
     static void commonSetup(FMLCommonSetupEvent event) {
@@ -106,7 +109,6 @@ public class DragonMounts {
         play.addListener(DragonMounts::onAttackEntity);
         play.addListener(DragonMounts::onEntityHurt);
         play.addListener(DragonMounts::onPlayerInteract);
-        event.enqueueWork(DMGameRules::init);
     }
 
     static void registerAttributes(EntityAttributeCreationEvent event) {
@@ -129,7 +131,6 @@ public class DragonMounts {
     static void onPlayReady(PlayerEvent.PlayerLoggedInEvent event) {
         var player = event.getEntity();
         ((ArmorEffectManager.Provider) player).dragonmounts$plus$getManager().sendInitPacket();
-        DMGameRules.sendInitPacket((ServerPlayer) player);
     }
 
     static void onPlayerClone(PlayerEvent.Clone event) {
@@ -190,7 +191,7 @@ public class DragonMounts {
 
     static void onPlayerInteract(PlayerInteractEvent.RightClickBlock event) {
         var level = event.getLevel();
-        if (level instanceof ServerLevel server && !level.dimension().equals(Level.END) && server.getGameRules().getBoolean(IS_EGG_OVERRIDDEN)) {
+        if (!level.isClientSide && !level.dimension().equals(Level.END) && ServerConfig.INSTANCE.isEggOverridden.get()) {
             var pos = event.getPos();
             if (level.getBlockState(pos).getBlock() == Blocks.DRAGON_EGG) {
                 event.setUseBlock(TriState.FALSE);

@@ -4,49 +4,40 @@ import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.config.ModConfig;
 import net.neoforged.neoforge.common.ModConfigSpec;
 
+import static net.dragonmounts.plus.config.EntryBuilder.config;
+
 public class ClientConfig {
     public static final ClientConfig INSTANCE = new ClientConfig();
-    private final ModConfigSpec.Builder builder;
+    public final ModConfigSpec spec;
     public final ModConfigSpec.BooleanValue debug;
-    public final ModConfigSpec.ConfigValue<Double> camera_distance;
-    public final ModConfigSpec.ConfigValue<Double> camera_offset;
-    public final ModConfigSpec.BooleanValue converge_pitch_angle;
-    public final ModConfigSpec.BooleanValue converge_yaw_angle;
-    public final ModConfigSpec.BooleanValue hover_animation;
-    public final ModConfigSpec.BooleanValue toggle_descending;
-    public final ModConfigSpec.BooleanValue toggle_breathing;
+    public final ModConfigSpec.DoubleValue cameraDistance;
+    public final ModConfigSpec.DoubleValue cameraOffset;
+    public final ModConfigSpec.BooleanValue convergePitchAngle;
+    public final ModConfigSpec.BooleanValue convergeYawAngle;
+    public final ModConfigSpec.BooleanValue hoverState;
+    public final ModConfigSpec.BooleanValue toggleDescending;
+    public final ModConfigSpec.BooleanValue toggleBreathing;
+    public final ModConfigSpec.BooleanValue pauseOnWhistle;
 
     private ClientConfig() {
         var builder = new ModConfigSpec.Builder();
-        this.debug = builder
-                .gameRestart()
-                .comment("Debug mode. You need to restart Minecraft for the change to take effect. Unless you're a developer or are told to activate it, you don't want to set this to true.")
-                .define("debug", false);
-        this.camera_distance = builder
-                .comment("Zoom out for third person 2 while riding the the dragon and dragon carriages DO NOT EXAGGERATE IF YOU DON'T WANT CORRUPTED WORLDS")
-                .define("camera_distance", 20.0D);
-        this.camera_offset = builder
-                .comment("Third Person Camera Horizontal Offset")
-                .define("camera_offset", 0.0D);
-        this.converge_pitch_angle = builder
-                .comment("Pitch Angle Convergence")
-                .define("converge_pitch_angle", true);
-        this.converge_yaw_angle = builder
-                .comment("Yaw Angle Convergence")
-                .define("converge_yaw_angle", true);
-        this.hover_animation = builder
-                .comment("Enables hover animation for dragons")
-                .define("hover_animation", true);
-        this.toggle_descending = builder
+        this.debug = config(builder.gameRestart(), "debug", false, "Debug mode. You need to restart Minecraft for the change to take effect. Unless you're a developer or are told to activate it, you don't want to set this to true.");
+        this.cameraDistance = config(builder, "cameraDistance", 20.0, 0.0, 64.0, "Zoom out for third person 2 while riding the the dragon and dragon carriages DO NOT EXAGGERATE IF YOU DON'T WANT CORRUPTED WORLDS");
+        this.cameraOffset = config(builder, "cameraOffset", 0.0, -32.0, 32.0, "Third Person Camera Horizontal Offset");
+        this.convergePitchAngle = config(builder, "convergePitchAngle", true, "Pitch Angle Convergence");
+        this.convergeYawAngle = config(builder, "convergeYawAngle", true, "Yaw Angle Convergence");
+        this.hoverState = config(builder, "hoverState", true, "Enables hover state for dragons");
+        this.toggleDescending = builder.translation("key.dragonmounts.plus.descend")
                 .comment("Enables players to keep dragon descending")
-                .define("toggle_descending", false);
-        this.toggle_breathing = builder
+                .define("toggleDescending", false);
+        this.toggleBreathing = builder.translation("key.dragonmounts.plus.breathe")
                 .comment("Enables players to keep dragon breathing")
-                .define("toggle_breathing", false);
-        this.builder = builder;
+                .define("toggleBreathing", false);
+        this.pauseOnWhistle = config(builder, "pauseOnWhistle", true, "Whether to try to pause the game when using whistle");
+        this.spec = builder.build();
     }
 
     public void register(ModContainer mod) {
-        mod.registerConfig(ModConfig.Type.CLIENT, this.builder.build());
+        mod.registerConfig(ModConfig.Type.CLIENT, this.spec);
     }
 }

@@ -113,8 +113,4 @@ public class ClientNetworkHandler {
             egg.setAge(payload.age(), false);
         }
     }
-
-    public static void handleEggPushable(EggPushablePayload payload, IPayloadContext context) {
-        HatchableDragonEggEntity.IS_PUSHABLE = payload.value();
-    }
 }

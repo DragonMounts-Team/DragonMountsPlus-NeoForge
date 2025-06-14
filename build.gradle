@@ -13,7 +13,7 @@ repositories {
 }
 
 base {
-    archivesName = "DragonMountsPlus-NeoForge-${minecraft_version}"
+    archivesName = "DragonMounts2-NeoForge-${minecraft_version}"
 }
 
 java.toolchain.languageVersion = JavaLanguageVersion.of(21)

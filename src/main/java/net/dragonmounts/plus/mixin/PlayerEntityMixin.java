@@ -18,7 +18,7 @@ import static net.dragonmounts.plus.common.capability.ArmorEffectManagerImpl.DAT
 @Mixin(Player.class)
 public abstract class PlayerEntityMixin extends LivingEntity implements Provider {
     @Unique
-    protected ArmorEffectManagerImpl dragonmounts$plus$manager = new ArmorEffectManagerImpl(Player.class.cast(this));
+    protected final ArmorEffectManagerImpl dragonmounts$plus$manager = new ArmorEffectManagerImpl(Player.class.cast(this));
 
     @Inject(method = "tick", at = @At("HEAD"))
     public void tickManager(CallbackInfo info) {

@@ -17,6 +17,7 @@ import net.minecraft.util.RandomSource;
 import net.neoforged.neoforge.registries.RegistryBuilder;
 import net.neoforged.neoforge.registries.callback.AddCallback;
 import net.neoforged.neoforge.registries.callback.ClearCallback;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -112,7 +113,8 @@ public class DragonVariant implements DragonTypified {
             this.size = 0;
         }
 
-        public DragonVariant draw(RandomSource random, @Nullable DragonVariant current, boolean acceptSelf) {
+        @Contract("!null, !null, _ -> !null")
+        public @Nullable DragonVariant draw(RandomSource random, @Nullable DragonVariant current, boolean acceptSelf) {
             switch (this.size) {
                 case 0:
                     return current;
