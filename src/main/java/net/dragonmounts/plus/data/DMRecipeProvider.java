@@ -111,7 +111,7 @@ public class DMRecipeProvider extends RecipeProvider {
                 .pattern("XXX")
                 .unlockedBy("has_sticks", has(Tags.Items.RODS_WOODEN))
                 .save(output);
-        this.shaped(RecipeCategory.TOOLS, DMItems.WHISTLE)
+        this.shaped(RecipeCategory.TOOLS, DMItems.FLUTE)
                 .define('P', Tags.Items.RODS_WOODEN)
                 .define('#', Tags.Items.ENDER_PEARLS)
                 .define('X', Tags.Items.STRINGS)

@@ -186,7 +186,7 @@ public class RegistryHandler {
             }
         });
         event.register(NeoForgeRegistries.Keys.ATTACHMENT_TYPES, registry ->
-                registry.register(makeId("whistle_holder"), DMAttachments.WHISTLE_HOLDER)
+                registry.register(makeId("flute_holder"), DMAttachments.FLUTE_HOLDER)
         );
         event.register(NeoForgeRegistries.Keys.ENTITY_DATA_SERIALIZERS, registry -> {
             registry.register(makeId("dragon_type"), DragonType.SERIALIZER);

@@ -1,10 +1,8 @@
 package net.dragonmounts.plus.compat.platform;
 
-import net.dragonmounts.plus.common.api.CommandOutput;
+import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.network.chat.Component;
 import net.neoforged.fml.loading.FMLLoader;
-import net.neoforged.neoforge.client.ClientCommandSourceStack;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Supplier;
 
@@ -13,17 +11,17 @@ public class PlatformCompat {
         return FMLLoader.getDist().isClient();
     }
 
-    public static @Nullable CommandOutput wrapAsOutput(Object object) {
-        return object instanceof ClientCommandSourceStack source ? new CommandOutput() {
-            @Override
-            public void sendSuccess(Supplier<Component> message) {
-                source.sendSuccess(message, true);
-            }
+    public static int sendSuccess(Object source, Supplier<Component> message) {
+        if (source instanceof CommandSourceStack) {
+            ((CommandSourceStack) source).sendSuccess(message, true);
+        }
+        return 1;
+    }
 
-            @Override
-            public void sendFailure(Component message) {
-                source.sendFailure(message);
-            }
-        } : null;
+    public static int sendFailure(Object source, Component message) {
+        if (source instanceof CommandSourceStack) {
+            ((CommandSourceStack) source).sendFailure(message);
+        }
+        return 0;
     }
 }

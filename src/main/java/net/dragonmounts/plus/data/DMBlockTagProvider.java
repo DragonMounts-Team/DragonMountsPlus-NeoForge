@@ -28,24 +28,15 @@ public class DMBlockTagProvider extends BlockTagsProvider {
 
     @Override
     protected void addTags(HolderLookup.Provider registries) {
-        this.tag(TORCHES)
-                .add(Blocks.TORCH, Blocks.WALL_TORCH, Blocks.SOUL_TORCH, Blocks.SOUL_WALL_TORCH, Blocks.REDSTONE_TORCH, Blocks.REDSTONE_WALL_TORCH);
-        this.tag(BlockTags.PIGLIN_REPELLENTS).add(DMBlocks.DRAGON_CORE.key);
-        this.tag(BlockTags.DRAGON_IMMUNE).add(DMBlocks.DRAGON_CORE.key);
-        this.tag(DMBlockTags.AIRFLOW_DESTRUCTIBLE)
-                .addTag(BlockTags.LEAVES)
-                .addTag(BlockTags.FLOWERS)
-                .addTag(BlockTags.SAPLINGS)
-                .addTag(BlockTags.CROPS)
-                .addTag(BlockTags.CAVE_VINES)
-                .addTag(BlockTags.FIRE)
-                .addTag(BlockTags.SMELTS_TO_GLASS)
-                .addTag(BlockTags.CONCRETE_POWDER)
-                .addTag(BlockTags.SNOW)
-                .addTag(Tags.Blocks.GLASS_PANES)
-                .addTag(Tags.Blocks.SANDS)
-                .addTag(TORCHES)
-                .add(
+        this.tag(TORCHES).add(
+                Blocks.TORCH,
+                Blocks.WALL_TORCH,
+                Blocks.SOUL_TORCH,
+                Blocks.SOUL_WALL_TORCH,
+                Blocks.REDSTONE_TORCH,
+                Blocks.REDSTONE_WALL_TORCH
+        );
+        this.tag(DMBlockTags.AIRFLOW_DESTRUCTIBLE).add(
                         // Overworld:
                         Blocks.SHORT_GRASS,
                         Blocks.FERN,
@@ -85,11 +76,28 @@ public class DMBlockTagProvider extends BlockTagsProvider {
                         Blocks.WALL_TORCH,
                         Blocks.SPONGE,
                         Blocks.WET_SPONGE
-                );
+                ).addTag(TORCHES)
+                .addTag(BlockTags.LEAVES)
+                .addTag(BlockTags.FLOWERS)
+                .addTag(BlockTags.SAPLINGS)
+                .addTag(BlockTags.CROPS)
+                .addTag(BlockTags.CAVE_VINES)
+                .addTag(BlockTags.FIRE)
+                .addTag(BlockTags.SMELTS_TO_GLASS)
+                .addTag(BlockTags.CONCRETE_POWDER)
+                .addTag(BlockTags.SNOW)
+                .addTag(Tags.Blocks.GLASS_PANES)
+                .addTag(Tags.Blocks.SANDS);
+
         addAll(this.tag(DMBlockTags.DRAGON_EGGS).add(Blocks.DRAGON_EGG), DMBlocks.BUILTIN_DRAGON_EGGS);
         addAll(this.tag(DMBlockTags.DRAGON_SCALE_BLOCKS), DMBlocks.BUILTIN_DRAGON_SCALE_BLOCKS);
-        this.tag(BlockTags.FEATURES_CANNOT_REPLACE).addTag(DMBlockTags.DRAGON_EGGS);
         this.tag(BlockTags.BEACON_BASE_BLOCKS).addTag(DMBlockTags.DRAGON_SCALE_BLOCKS);
+        this.tag(BlockTags.NEEDS_DIAMOND_TOOL).addTag(DMBlockTags.DRAGON_SCALE_BLOCKS);
+        this.tag(BlockTags.FEATURES_CANNOT_REPLACE).addTag(DMBlockTags.DRAGON_EGGS);
+        this.tag(BlockTags.PIGLIN_REPELLENTS).add(DMBlocks.DRAGON_CORE.key);
+        this.tag(BlockTags.DRAGON_IMMUNE).add(DMBlocks.DRAGON_CORE.key);
+        this.tag(BlockTags.MINEABLE_WITH_PICKAXE).addTag(DMBlockTags.DRAGON_SCALE_BLOCKS);
+        this.tag(BlockTags.MINEABLE_WITH_AXE).add(DMBlocks.DRAGON_NEST.key);
     }
 
     static void addAll(TagAppender<Block> builder, Collection<? extends BlockHolder<?>> blocks) {

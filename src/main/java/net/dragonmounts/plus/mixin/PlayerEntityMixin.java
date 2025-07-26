@@ -25,7 +25,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements Provider
         this.dragonmounts$plus$manager.tick();
     }
 
-    @Inject(method = "readAdditionalSaveData", at = @At("TAIL"))
+    @Inject(method = "addAdditionalSaveData", at = @At("TAIL"))
     public void saveCooldown(CompoundTag tag, CallbackInfo info) {
         var data = this.dragonmounts$plus$manager.saveNBT();
         if (data.isEmpty()) return;

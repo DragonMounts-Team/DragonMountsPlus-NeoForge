@@ -11,11 +11,8 @@ import net.dragonmounts.plus.compat.platform.ClientNetworkHandler;
 import net.dragonmounts.plus.compat.platform.ServerNetworkHandler;
 import net.dragonmounts.plus.compat.registry.EntityHolder;
 import net.dragonmounts.plus.compat.registry.RegistryHandler;
+import net.dragonmounts.plus.config.EntryUtil;
 import net.dragonmounts.plus.config.ServerConfig;
-import net.dragonmounts.plus.config.network.ConfigNetworkHandler;
-import net.dragonmounts.plus.config.network.S2CBooleanConfigPayload;
-import net.dragonmounts.plus.config.network.S2CDoubleConfigPayload;
-import net.dragonmounts.plus.config.network.S2CSyncConfigPayload;
 import net.dragonmounts.plus.data.*;
 import net.minecraft.core.RegistrySetBuilder;
 import net.minecraft.core.registries.Registries;
@@ -65,6 +62,8 @@ public class DragonMounts {
         modbus.addListener(DragonMounts::modifyCreativeTab);
         modbus.addListener(DragonMounts::gatherClientData);
         modbus.addListener(DragonMounts::gatherServerData);
+        modbus.addListener(EntryUtil::onLoad);
+        modbus.addListener(EntryUtil::onReload);
         DMEntities.init();
         DMDataComponents.init();
         DMItems.init();
@@ -87,7 +86,7 @@ public class DragonMounts {
         registrar.playToServer(ToggleSittingByIDPayload.TYPE, ToggleSittingByIDPayload.CODEC, ServerNetworkHandler::handleToggleSitting);
         registrar.playToServer(ToggleTrustPayload.TYPE, ToggleTrustPayload.CODEC, ServerNetworkHandler::handleToggleTrust);
         registrar.playToServer(ToggleFollowingPayload.TYPE, ToggleFollowingPayload.CODEC, ServerNetworkHandler::handleToggleFollowing);
-        registrar.playToServer(RenameWhistlePayload.TYPE, RenameWhistlePayload.CODEC, ServerNetworkHandler::handleRenameWhistle);
+        registrar.playToServer(RenameFlutePayload.TYPE, RenameFlutePayload.CODEC, ServerNetworkHandler::handleRenameFlute);
         registrar.playToClient(SyncCooldownPayload.TYPE, SyncCooldownPayload.CODEC, ClientNetworkHandler::handleCooldownSync);
         registrar.playToClient(ArmorRipostePayload.TYPE, ArmorRipostePayload.CODEC, ClientNetworkHandler::handleArmorRiposte);
         registrar.playToClient(InitCooldownPayload.TYPE, InitCooldownPayload.CODEC, ClientNetworkHandler::handleCooldownInit);
@@ -95,9 +94,8 @@ public class DragonMounts {
         registrar.playToClient(SyncDragonAgePayload.TYPE, SyncDragonAgePayload.CODEC, ClientNetworkHandler::handleDragonSync);
         registrar.playToClient(FeedDragonPayload.TYPE, FeedDragonPayload.CODEC, ClientNetworkHandler::handleFeedDragon);
         registrar.playToClient(SyncEggAgePayload.TYPE, SyncEggAgePayload.CODEC, ClientNetworkHandler::handleEggSync);
-        registrar.playToClient(S2CSyncConfigPayload.TYPE, S2CSyncConfigPayload.CODEC, ConfigNetworkHandler::handleSyncConfig);
-        registrar.playToClient(S2CBooleanConfigPayload.TYPE, S2CBooleanConfigPayload.CODEC, ConfigNetworkHandler::handleBooleanConfig);
-        registrar.playToClient(S2CDoubleConfigPayload.TYPE, S2CDoubleConfigPayload.CODEC, ConfigNetworkHandler::handleDoubleConfig);
+        registrar.playToClient(BooleanConfigPayload.TYPE, BooleanConfigPayload.CODEC, ClientNetworkHandler::handleBooleanConfig);
+        registrar.playToClient(DoubleConfigPayload.TYPE, DoubleConfigPayload.CODEC, ClientNetworkHandler::handleDoubleConfig);
     }
 
     static void commonSetup(FMLCommonSetupEvent event) {

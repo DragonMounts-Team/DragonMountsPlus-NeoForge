@@ -49,7 +49,10 @@ public class EntityHolder<T extends Entity> extends DeferredHolder<EntityType<T>
 
     public static void registerAttributes(EntityAttributeCreationEvent event) {
         for (var entry : ATTRIBUTES.object2ObjectEntrySet()) {
-            event.put(entry.getKey().get(), entry.getValue().get().build());
+            event.put(
+                    entry.getKey().get(),
+                    (entry.getValue() == null ? AttributeSupplier.builder() : entry.getValue().get()).build()
+            );
         }
     }
 

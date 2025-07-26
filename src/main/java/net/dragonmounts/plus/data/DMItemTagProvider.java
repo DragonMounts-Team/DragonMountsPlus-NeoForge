@@ -3,6 +3,7 @@ package net.dragonmounts.plus.data;
 import net.dragonmounts.plus.common.DragonMountsShared;
 import net.dragonmounts.plus.common.init.DMBlocks;
 import net.dragonmounts.plus.common.init.DMItems;
+import net.dragonmounts.plus.common.init.DragonVariants;
 import net.dragonmounts.plus.common.item.*;
 import net.dragonmounts.plus.common.tag.DMBlockTags;
 import net.dragonmounts.plus.common.tag.DMItemTags;
@@ -125,5 +126,12 @@ public class DMItemTagProvider extends ItemTagsProvider {
         this.copy(DMBlockTags.DRAGON_SCALE_BLOCKS, DMItemTags.DRAGON_SCALE_BLOCKS);
         this.tag(ItemTags.PIGLIN_REPELLENTS).add(DMBlocks.DRAGON_CORE.asItem());
         this.tag(ItemTags.PIGLIN_LOVED).add(DMItems.GOLDEN_DRAGON_ARMOR.key);
+        var skulls = this.tag(DMItemTags.DRAGON_HEADS).add(Items.DRAGON_HEAD);
+        for (var variant : DragonVariants.BUILTIN_VALUES) {
+            skulls.add(variant.head.asItem());
+        }
+        this.tag(ItemTags.SKULLS).addTag(DMItemTags.DRAGON_HEADS);
+        this.tag(ItemTags.NOTE_BLOCK_TOP_INSTRUMENTS).addTag(DMItemTags.DRAGON_HEADS);
+
     }
 }

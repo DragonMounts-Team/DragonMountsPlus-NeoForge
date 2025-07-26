@@ -1,3 +1,5 @@
+import groovy.json.JsonSlurper
+
 plugins {
     id 'java-library'
     id 'maven-publish'
@@ -122,6 +124,19 @@ dependencies {
 // This block of code expands all declared replace properties in the specified resource targets.
 // A missing property will result in an error. Properties are expanded using ${} Groovy notation.
 var generateModMetadata = tasks.register("generateModMetadata", ProcessResources) {
+    def config = new File("run", "build.json")
+    if (config.exists()) {
+        inputs.file config
+        doFirst {
+            def json = new JsonSlurper().parseText(config.text)
+            def suffix = json.suffix as String
+            if (json.weekly) {
+                project.version = "$project.version-${'%dw%02d'.formatted(Calendar.instance.get(Calendar.YEAR) % 100, Calendar.instance.get(Calendar.WEEK_OF_YEAR))}${suffix ?: 'a'}"
+            } else if (suffix != null && !suffix.isBlank()) {
+                project.version = "$project.version-$json.suffix"
+            }
+        }
+    }
     var replaceProperties = [minecraft_version      : minecraft_version,
                              minecraft_version_range: minecraft_version_range,
                              neo_version            : neo_version,
@@ -130,7 +145,7 @@ var generateModMetadata = tasks.register("generateModMetadata", ProcessResources
                              mod_id                 : mod_id,
                              mod_name               : mod_name,
                              mod_license            : mod_license,
-                             mod_version            : mod_version,
+                             mod_version            : project.version,
                              mod_authors            : mod_authors,
                              mod_description        : mod_description]
     inputs.properties replaceProperties

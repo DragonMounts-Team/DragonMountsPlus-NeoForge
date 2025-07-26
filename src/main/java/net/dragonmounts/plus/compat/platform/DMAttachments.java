@@ -1,15 +1,15 @@
 package net.dragonmounts.plus.compat.platform;
 
-import net.dragonmounts.plus.common.capability.WhistleHolder;
-import net.dragonmounts.plus.common.inventory.WhistleHolderImpl;
+import net.dragonmounts.plus.common.capability.FluteHolder;
+import net.dragonmounts.plus.common.inventory.FluteHolderImpl;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.attachment.AttachmentHolder;
 import net.neoforged.neoforge.attachment.AttachmentType;
 
 public class DMAttachments {
-    public static final AttachmentType<WhistleHolder> WHISTLE_HOLDER = AttachmentType
-            .<WhistleHolder>builder(WhistleHolderImpl::new)
-            .serialize(ItemStack.OPTIONAL_CODEC.xmap(WhistleHolderImpl::of, WhistleHolder::getWhistle))
+    public static final AttachmentType<FluteHolder> FLUTE_HOLDER = AttachmentType
+            .<FluteHolder>builder(FluteHolderImpl::new)
+            .serialize(ItemStack.OPTIONAL_CODEC.xmap(FluteHolderImpl::of, FluteHolder::getFlute))
             .copyOnDeath()
             .build();
 

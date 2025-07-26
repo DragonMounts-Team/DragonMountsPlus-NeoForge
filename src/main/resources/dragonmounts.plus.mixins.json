@@ -11,6 +11,7 @@
     "DebugPacketsMixin",
     "ItemEntityMixin",
     "ItemStackMixin",
+    "LivingEntityMixin",
     "MobAccessor",
     "NoiseColumnMixin",
     "PlayerEntityMixin",

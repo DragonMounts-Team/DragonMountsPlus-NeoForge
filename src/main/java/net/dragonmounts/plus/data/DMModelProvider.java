@@ -9,6 +9,7 @@ import net.dragonmounts.plus.common.init.DragonVariants;
 import net.dragonmounts.plus.common.item.*;
 import net.dragonmounts.plus.compat.registry.*;
 import net.minecraft.client.color.item.Dye;
+import net.minecraft.client.color.item.ItemTintSource;
 import net.minecraft.client.data.models.BlockModelGenerators;
 import net.minecraft.client.data.models.ItemModelGenerators;
 import net.minecraft.client.data.models.ModelProvider;
@@ -70,7 +71,7 @@ public class DMModelProvider extends ModelProvider {
             ));
         }
         // Items:
-        items.generateItemWithTintedOverlay(DMItems.WHISTLE.get(), "_string", new Dye(-1));
+        generateFlute(items, DMItems.FLUTE.get());
         generateFlatItem(items, DMItems.AMULET);
         generateFlatItem(items, DMItems.IRON_DRAGON_ARMOR);
         generateFlatItem(items, DMItems.GOLDEN_DRAGON_ARMOR);
@@ -120,6 +121,16 @@ public class DMModelProvider extends ModelProvider {
 
     public static void generateSpawnEgg(ItemModelGenerators gen, ItemHolder<?> item, int primaryColor, int secondaryColor) {
         gen.generateSpawnEgg(item.get(), primaryColor, secondaryColor);
+    }
+
+    public static void generateFlute(ItemModelGenerators gen, Item flute) {
+        var tints = new ItemTintSource[]{constantTint(-1), new Dye(-1)};
+        gen.generateBooleanDispatch(
+                flute,
+                isUsingItem(),
+                tintedModel(getModelLocation(flute, "_playing"), tints),
+                tintedModel(gen.generateLayeredItem(flute, getItemTexture(flute), getItemTexture(flute, "_string")), tints)
+        );
     }
 
     /**

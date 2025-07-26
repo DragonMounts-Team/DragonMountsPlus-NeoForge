@@ -10,15 +10,20 @@ import net.dragonmounts.plus.common.entity.dragon.HatchableDragonEggEntity;
 import net.dragonmounts.plus.common.network.s2c.*;
 import net.dragonmounts.plus.common.util.math.MathUtil;
 import net.dragonmounts.plus.compat.registry.CooldownCategory;
+import net.dragonmounts.plus.config.ServerConfig;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.particles.ItemParticleOption;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.nbt.ByteTag;
+import net.minecraft.nbt.DoubleTag;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.neoforged.neoforge.network.PacketDistributor;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
+
+import static net.dragonmounts.plus.config.EntryUtil.override;
 
 public class ClientNetworkHandler {
     public static void send(CustomPacketPayload payload) {
@@ -112,5 +117,17 @@ public class ClientNetworkHandler {
         if (((LocalPlayer) context.player()).clientLevel.getEntity(payload.id()) instanceof HatchableDragonEggEntity egg) {
             egg.setAge(payload.age(), false);
         }
+    }
+
+    public static void handleBooleanConfig(BooleanConfigPayload payload, IPayloadContext ignored) {
+        var entry = ServerConfig.INSTANCE.getEntry(payload.id());
+        if (entry == null) return;
+        override(entry, ByteTag.valueOf(payload.value()));
+    }
+
+    public static void handleDoubleConfig(DoubleConfigPayload payload, IPayloadContext ignored) {
+        var entry = ServerConfig.INSTANCE.getEntry(payload.id());
+        if (entry == null) return;
+        override(entry, DoubleTag.valueOf(payload.value()));
     }
 }
