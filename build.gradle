@@ -124,17 +124,14 @@ dependencies {
 // This block of code expands all declared replace properties in the specified resource targets.
 // A missing property will result in an error. Properties are expanded using ${} Groovy notation.
 var generateModMetadata = tasks.register("generateModMetadata", ProcessResources) {
-    def config = new File("run", "build.json")
-    if (config.exists()) {
-        inputs.file config
-        doFirst {
-            def json = new JsonSlurper().parseText(config.text)
-            def suffix = json.suffix as String
-            if (json.weekly) {
-                project.version = "$project.version-${'%dw%02d'.formatted(Calendar.instance.get(Calendar.YEAR) % 100, Calendar.instance.get(Calendar.WEEK_OF_YEAR))}${suffix ?: 'a'}"
-            } else if (suffix != null && !suffix.isBlank()) {
-                project.version = "$project.version-$json.suffix"
-            }
+    var config = layout.projectDirectory.file("./run/build.json")
+    if (config.asFile.exists()) {
+        var json = new JsonSlurper().parseText(providers.fileContents(config).asText.get())
+        var suffix = json.suffix as String
+        if (json.weekly) {
+            project.version = "$project.version-${'%dw%02d'.formatted(Calendar.instance.get(Calendar.YEAR) % 100, Calendar.instance.get(Calendar.WEEK_OF_YEAR))}${suffix ?: 'a'}"
+        } else if (suffix != null && !suffix.isBlank()) {
+            project.version = "$project.version-$suffix"
         }
     }
     var replaceProperties = [minecraft_version      : minecraft_version,

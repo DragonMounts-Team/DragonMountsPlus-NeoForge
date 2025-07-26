@@ -98,7 +98,7 @@ public class DMItemTagProvider extends ItemTagsProvider {
             type.ifPresent(DragonScaleShieldItem.class, addToShields);
         }
         this.tag(DMItemTags.DRAGON_INEDIBLE)
-                .add(Items.PUFFERFISH) // fabric considers raw puffer fish as food...
+                .add(Items.PUFFERFISH) // it is considered as food in conventional tags...
                 .add(Items.PUFFERFISH_BUCKET)
                 .add(Items.AXOLOTL_BUCKET)
                 .add(Items.TADPOLE_BUCKET)
