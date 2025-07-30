@@ -6,11 +6,11 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "dragonmounts.plus:sculk_dragon_head"
+          "name": "dragonmounts.plus:wild_sculk_dragon_head"
         }
       ],
       "rolls": 1.0
     }
   ],
-  "random_sequence": "dragonmounts.plus:blocks/sculk_dragon_head"
+  "random_sequence": "dragonmounts.plus:blocks/wild_sculk_dragon_head"
 }

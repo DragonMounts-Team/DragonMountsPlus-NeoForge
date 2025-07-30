@@ -26,6 +26,6 @@ public enum BreathParticleProvider implements ParticleProvider<BreathParticleOpt
 
     @Override
     public @Nullable Particle createParticle(BreathParticleOption option, @NotNull ClientLevel level, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed) {
-        return option.variant().appearance.createParticle(option, this.getAtlas(), level, x, y, z, xSpeed, ySpeed, zSpeed);
+        return option.variant().appearance.createBreathParticle(option, this.getAtlas(), level, x, y, z, xSpeed, ySpeed, zSpeed);
     }
 }

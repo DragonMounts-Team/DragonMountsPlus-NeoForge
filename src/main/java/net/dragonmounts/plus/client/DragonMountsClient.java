@@ -18,9 +18,14 @@ import net.dragonmounts.plus.compat.platform.ClientNetworkHandler;
 import net.dragonmounts.plus.compat.platform.DMScreenHandlers;
 import net.dragonmounts.plus.compat.registry.DragonVariant;
 import net.dragonmounts.plus.config.ClientConfig;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.Direction;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.packs.PackType;
+import net.minecraft.server.packs.repository.Pack;
+import net.minecraft.server.packs.repository.PackSource;
 import net.minecraft.server.packs.resources.ResourceManagerReloadListener;
 import net.minecraft.util.Mth;
 import net.neoforged.api.distmarker.Dist;
@@ -33,6 +38,7 @@ import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
 import net.neoforged.neoforge.client.resources.VanillaClientListeners;
 import net.neoforged.neoforge.client.settings.KeyConflictContext;
 import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.event.AddPackFindersEvent;
 
 import static net.dragonmounts.plus.common.DragonMountsShared.makeId;
 
@@ -43,6 +49,7 @@ public class DragonMountsClient {
     public DragonMountsClient(IEventBus modbus, ModContainer container) {
         ClientConfig.INSTANCE.register(container);
         modbus.addListener(DragonMountsClient::onClientSetup);
+        modbus.addListener(DragonMountsClient::registerBuiltinPacks);
         modbus.addListener(DragonMountsClient::registerKeyMappings);
         modbus.addListener(DragonMountsClient::registerReloadListeners);
         modbus.addListener(DragonMountsClient::registerParticles);
@@ -52,6 +59,22 @@ public class DragonMountsClient {
         modbus.addListener(DragonMountsClient::registerSpecialRendererCodecs);
         modbus.addListener(DragonMountsClient::registerSpecialRenderers);
         container.registerExtensionPoint(IConfigScreenFactory.class, DMConfigScreen::new);
+    }
+
+    public static void registerBuiltinPacks(AddPackFindersEvent event) {
+        var source = Component.translatable("pack.source.builtinMod", "Dragon Mounts 2");
+        event.addPackFinders(
+                ResourceLocation.fromNamespaceAndPath(DragonMounts.MOD_ID, "resourcepacks/classic_amulet"),
+                PackType.CLIENT_RESOURCES,
+                Component.translatable("resourcePack.dragonmounts.plus.classic_amulet.name"),
+                PackSource.create(desc -> Component.translatable(
+                        "pack.nameAndSource",
+                        desc,
+                        source
+                ).withStyle(ChatFormatting.GRAY), true),
+                false,
+                Pack.Position.TOP
+        );
     }
 
     public static void onClientSetup(FMLClientSetupEvent event) {
@@ -130,7 +153,7 @@ public class DragonMountsClient {
         }
     }
 
-    static void modifyPlayerFov(ComputeFovModifierEvent event) {
+    public static void modifyPlayerFov(ComputeFovModifierEvent event) {
         var player = event.getPlayer();
         if (player.isUsingItem() && player.getUseItem().getItem() instanceof DragonScaleBowItem) {
             event.setNewFovModifier(event.getFovModifier() * (
