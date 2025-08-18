@@ -34,8 +34,8 @@ import net.neoforged.neoforge.data.event.GatherDataEvent;
 import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
 import net.neoforged.neoforge.event.RegisterCommandsEvent;
 import net.neoforged.neoforge.event.entity.EntityAttributeCreationEvent;
+import net.neoforged.neoforge.event.entity.living.LivingDamageEvent;
 import net.neoforged.neoforge.event.entity.living.LivingExperienceDropEvent;
-import net.neoforged.neoforge.event.entity.living.LivingIncomingDamageEvent;
 import net.neoforged.neoforge.event.entity.player.AttackEntityEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
@@ -147,7 +147,7 @@ public class DragonMounts {
         DMArmorEffects.meleeChanneling(player, player.level(), InteractionHand.MAIN_HAND, event.getTarget(), null);
     }
 
-    static void onEntityHurt(LivingIncomingDamageEvent event) {
+    static void onEntityHurt(LivingDamageEvent.Pre event) {
         var self = event.getEntity();
         if (!(self instanceof ArmorEffectManager.Provider)) return;
         var level = (ServerLevel) self.level();
@@ -214,7 +214,7 @@ public class DragonMounts {
 
     public static void gatherClientData(GatherDataEvent.Client event) {
         event.createProvider(DMModelProvider::new);
-        event.createProvider(DMEquipmentAssetProvider::new);
+        event.createProvider(DMEquipmentAssetProvider::from);
         gatherCommonData(event);
     }
 

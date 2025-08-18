@@ -8,7 +8,6 @@ import net.minecraft.data.tags.BiomeTagsProvider;
 import net.minecraft.tags.BiomeTags;
 import net.minecraft.world.level.biome.Biomes;
 import net.neoforged.neoforge.common.Tags;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.concurrent.CompletableFuture;
 
@@ -18,7 +17,7 @@ public class DMBiomeTagProvider extends BiomeTagsProvider {
     }
 
     @Override
-    protected void addTags(@NotNull HolderLookup.Provider registries) {
+    protected void addTags(HolderLookup.Provider registries) {
         this.tag(DMBiomeTags.HAS_AETHER_DRAGON_NEST)
                 .addTag(BiomeTags.IS_OCEAN);
         this.tag(DMBiomeTags.HAS_ENCHANTED_DRAGON_NEST)

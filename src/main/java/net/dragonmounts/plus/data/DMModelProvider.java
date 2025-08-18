@@ -73,6 +73,7 @@ public class DMModelProvider extends ModelProvider {
         // Items:
         generateFlute(items, DMItems.FLUTE.get());
         generateFlatItem(items, DMItems.AMULET);
+        generateFlatItem(items, DMItems.COPPER_DRAGON_ARMOR);
         generateFlatItem(items, DMItems.IRON_DRAGON_ARMOR);
         generateFlatItem(items, DMItems.GOLDEN_DRAGON_ARMOR);
         generateFlatItem(items, DMItems.EMERALD_DRAGON_ARMOR);
@@ -129,7 +130,7 @@ public class DMModelProvider extends ModelProvider {
                 flute,
                 isUsingItem(),
                 tintedModel(getModelLocation(flute, "_playing"), tints),
-                tintedModel(gen.generateLayeredItem(flute, getItemTexture(flute), getItemTexture(flute, "_string")), tints)
+                tintedModel(getModelLocation(flute), tints)
         );
     }
 
