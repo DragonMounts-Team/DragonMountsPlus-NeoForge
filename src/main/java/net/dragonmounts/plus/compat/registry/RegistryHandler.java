@@ -32,7 +32,6 @@ import net.minecraft.world.level.levelgen.structure.pieces.StructurePieceType;
 import net.neoforged.neoforge.registries.NeoForgeRegistries;
 import net.neoforged.neoforge.registries.NewRegistryEvent;
 import net.neoforged.neoforge.registries.RegisterEvent;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.Optional;
@@ -75,11 +74,11 @@ public class RegistryHandler {
             StreamCodec<? super RegistryFriendlyByteBuf, T> packetCodec
     ) {
         return register(PARTICLES, makeId(name), new ParticleType<T>(overrideLimiter) {
-            public @NotNull MapCodec<T> codec() {
+            public MapCodec<T> codec() {
                 return codec;
             }
 
-            public @NotNull StreamCodec<? super RegistryFriendlyByteBuf, T> streamCodec() {
+            public StreamCodec<? super RegistryFriendlyByteBuf, T> streamCodec() {
                 return packetCodec;
             }
         });

@@ -6,6 +6,7 @@ import net.dragonmounts.plus.common.client.ClientDragonEntity;
 import net.dragonmounts.plus.common.client.gui.DragonCoreScreen;
 import net.dragonmounts.plus.common.client.gui.DragonInventoryScreen;
 import net.dragonmounts.plus.common.client.model.dragon.BuiltinFactory;
+import net.dragonmounts.plus.common.client.renderer.DMCoreShaders;
 import net.dragonmounts.plus.common.client.renderer.block.DragonCoreRenderer;
 import net.dragonmounts.plus.common.client.renderer.block.DragonHeadRenderer;
 import net.dragonmounts.plus.common.client.renderer.dragon.TameableDragonRenderer;
@@ -55,6 +56,7 @@ public class DragonMountsClient {
         modbus.addListener(DragonMountsClient::registerParticles);
         modbus.addListener(DragonMountsClient::registerModels);
         modbus.addListener(DragonMountsClient::registerRenderers);
+        modbus.addListener(DragonMountsClient::registerShaders);
         modbus.addListener(DragonMountsClient::registerScreens);
         modbus.addListener(DragonMountsClient::registerSpecialRendererCodecs);
         modbus.addListener(DragonMountsClient::registerSpecialRenderers);
@@ -114,6 +116,11 @@ public class DragonMountsClient {
         event.registerBlockEntityRenderer(DMBlockEntities.DRAGON_HEAD.get(), DragonHeadRenderer.INSTANCE);
         event.registerEntityRenderer(DMEntities.HATCHABLE_DRAGON_EGG.get(), DragonEggRenderer::new);
         event.registerEntityRenderer(DMEntities.TAMEABLE_DRAGON.cast(), TameableDragonRenderer::new);
+    }
+
+    static void registerShaders(RegisterShadersEvent event) {
+        event.registerShader(DMCoreShaders.RENDERTYPE_ENTITY_CUTOUT_DECAL);
+        event.registerShader(DMCoreShaders.RENDERTYPE_ENTITY_TRANSLUCENT_EMISSIVE_DECAL);
     }
 
     public static void registerScreens(RegisterMenuScreensEvent event) {
