@@ -136,9 +136,8 @@ public class DragonMounts {
     }
 
     static void onDropExperience(LivingExperienceDropEvent event) {
-        var player = event.getAttackingPlayer();
-        if (player != null && ((ArmorEffectManager.Provider) player).dragonmounts$plus$getManager().isActive(DMArmorEffects.ENCHANTED)) {
-            event.setDroppedExperience((int) (event.getOriginalExperience() * 1.5F + 0.5F));//Math.ceil(original * 1.5)
+        if (event.getAttackingPlayer() instanceof ArmorEffectManager.Provider provider && provider.dragonmounts$plus$getManager().isActive(DMArmorEffects.ENCHANTED)) {
+            event.setDroppedExperience((int) Math.ceil(event.getOriginalExperience() * 1.5F));
         }
     }
 
