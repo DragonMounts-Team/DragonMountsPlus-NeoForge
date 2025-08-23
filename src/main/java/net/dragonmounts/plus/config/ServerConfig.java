@@ -106,7 +106,7 @@ public class ServerConfig extends ConfigHolder<CommandSourceStack> {
                 config(builder, "baseKnockbackResistance", 1.0, 0.0, 1.0, "The base knockback resistance of a newly spawned dragon at adulthood", this::invalidateAttributes)
         );
         EntryUtil.register(registry, this.baseMovementSpeed =
-                config(builder, "baseMovementSpeed", 0.4, 0.0, 1024.0, "The base movement speed of a newly spawned dragon at adulthood", this::invalidateAttributes)
+                config(builder, "baseMovementSpeed", 0.3, 0.0, 1024.0, "The base movement speed of a newly spawned dragon at adulthood", this::invalidateAttributes)
         );
         EntryUtil.register(registry, this.baseStepHeight =
                 config(builder, "baseStepHeight", 1.25, 0.0, 10, "The base step height of a newly spawned dragon at adulthood", this::invalidateAttributes)
