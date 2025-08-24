@@ -18,7 +18,6 @@ import net.neoforged.neoforge.registries.RegistryBuilder;
 import net.neoforged.neoforge.registries.callback.AddCallback;
 import net.neoforged.neoforge.registries.callback.ClearCallback;
 import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -36,11 +35,11 @@ public class DragonVariant implements DragonTypified {
     public static final StreamCodec<RegistryFriendlyByteBuf, DragonVariant> STREAM_CODEC;
     public static final EntityDataSerializer<DragonVariant> SERIALIZER;
 
-    public static @NotNull DragonVariant draw(DragonType type, RandomSource random) {
+    public static DragonVariant draw(DragonType type, RandomSource random) {
         return type.variants.draw(random, DragonVariants.ENDER_FEMALE, true);
     }
 
-    public static @NotNull DragonVariant draw(DragonType type, RandomSource random, String current) {
+    public static DragonVariant draw(DragonType type, RandomSource random, String current) {
         if (current.isEmpty()) return type.variants.draw(random, DragonVariants.ENDER_FEMALE, true);
         var variant = DragonVariant.REGISTRY.getOptional(ResourceLocation.tryParse(current)).orElse(null);
         return variant == null

@@ -9,7 +9,6 @@ import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
 import net.minecraft.world.level.block.state.BlockState;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Function;
 
@@ -43,7 +42,7 @@ public class BlockHolder<T extends Block> extends DeferredHolder<T, Block> imple
     }
 
     @Override
-    public final @NotNull Item asItem() {
+    public final Item asItem() {
         return this.get().asItem();
     }
 

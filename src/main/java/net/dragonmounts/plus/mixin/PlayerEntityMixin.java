@@ -66,6 +66,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements Provider
         int amplifier = this.dragonmounts$plus$manager.getLevel(DMArmorEffects.SCULK, true);
         if (amplifier < 2) return;
         if (amplifier > 3 && !this.dragonmounts$plus$reflecting && source.getEntity() instanceof LivingEntity attacker) {
+            if (!attacker.closerThan(this, 24, 32)) return;
             this.dragonmounts$plus$reflecting = true;
             var start = this.position().add(this.getAttachments().get(EntityAttachment.WARDEN_CHEST, 0, this.getYRot()));
             var distance = attacker.getEyePosition().subtract(start);

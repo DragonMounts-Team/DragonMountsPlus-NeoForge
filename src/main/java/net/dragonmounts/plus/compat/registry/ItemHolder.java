@@ -7,7 +7,6 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ItemLike;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Function;
 
@@ -47,7 +46,7 @@ public class ItemHolder<T extends Item> extends DeferredHolder<T, Item> implemen
     }
 
     @Override
-    public @NotNull Item asItem() {
+    public Item asItem() {
         return this.get();
     }
 }
