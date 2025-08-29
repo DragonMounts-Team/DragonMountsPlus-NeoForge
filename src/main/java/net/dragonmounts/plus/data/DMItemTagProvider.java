@@ -69,6 +69,8 @@ public class DMItemTagProvider extends ItemTagsProvider {
                 .add(Items.DEBUG_STICK)
                 .add(Items.BONE)
                 .add(Items.BAMBOO);
+        this.tag(DMItemTags.DRAGON_SADDLES)
+                .add(Items.SADDLE);
         var head = this.tag(ItemTags.HEAD_ARMOR);
         var chest = this.tag(ItemTags.CHEST_ARMOR);
         var leg = this.tag(ItemTags.LEG_ARMOR);
